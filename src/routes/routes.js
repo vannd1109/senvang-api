@@ -136,6 +136,7 @@ router.post("/add-user", async (req, res) => {
       id: req.body.id,
       username: req.body.username,
       password: req.body.password,
+      type: req.body.type,
       email: req.body.email,
       firstname: req.body.firstname,
       lastname: req.body.lastname,
