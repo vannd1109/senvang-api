@@ -12,7 +12,6 @@ router.post("/add-slider", async (req, res) => {
   });
 
   try {
-    console.log(data);
     const dataToSave = await data.save();
     res.status(200).json(dataToSave);
   } catch (error) {
