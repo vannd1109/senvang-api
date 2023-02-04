@@ -2,29 +2,29 @@ const db = require("../models");
 const ROLES = db.ROLES;
 const User = db.user;
 
-const checkDuplicateUsernameOrEmail = async (req, res, next) => {
+const checkDuplicateUsernameOrEmail =  (req, res, next) => {
   // Username
   User.findOne({
     username: req.body.username
-  }).exec( async (err, user) => {
+  }).exec(  (err, user) => {
     if (err) {
-      return await res.status(500).send({ message: err });
+      return res.status(500).send({ message: err });
     }
 
     if (user) {
-      return await res.status(400).send({ message: "Tên đăng nhập đã tồn tại!" });
+      return res.status(400).send({ message: "Tên đăng nhập đã tồn tại!" });
     }
 
     // Email
     User.findOne({
       email: req.body.email
-    }).exec(async (err, user) => {
+    }).exec( (err, user) => {
       if (err) {
-        return await res.status(500).send({ message: err });
+        return res.status(500).send({ message: err });
       }
 
       if (user) {
-        return await res.status(400).send({ message: "Email đã được sử dụng!" });
+        return res.status(400).send({ message: "Email đã được sử dụng!" });
       }
 
       next();
