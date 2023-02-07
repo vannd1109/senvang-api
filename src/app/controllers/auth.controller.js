@@ -8,60 +8,64 @@ var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
   const user = new User({
+    fullname: req.body.fullname,
     username: req.body.username,
     email: req.body.email,
+    roles: req.body.roles,
     password: bcrypt.hashSync(req.body.password, 8),
   });
 
-  user.save((err, user) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
-    }
+  console.log(user);
 
-    if (req.body.roles) {
-      Role.find(
-        {
-          name: { $in: req.body.roles },
-        },
-        (err, roles) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
+  // user.save((err, user) => {
+  //   if (err) {
+  //     res.status(500).send({ message: err });
+  //     return;
+  //   }
 
-          user.roles = roles.map((role) => role._id);
-          user.save((err) => {
-            if (err) {
-              res.status(500).send({ message: err });
-              return;
-            }
+  //   if (req.body.roles) {
+  //     Role.find(
+  //       {
+  //         name: { $in: req.body.roles },
+  //       },
+  //       (err, roles) => {
+  //         if (err) {
+  //           res.status(500).send({ message: err });
+  //           return;
+  //         }
 
-            res.send({ message: "Tạo thành công tài khoản mới!" });
-            return;
-          });
-        }
-      );
-    } else {
-      Role.findOne({ name: "user" }, (err, role) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
+  //         user.roles = roles.map((role) => role._id);
+  //         user.save((err) => {
+  //           if (err) {
+  //             res.status(500).send({ message: err });
+  //             return;
+  //           }
 
-        user.roles = [role._id];
-        user.save((err) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
+  //           res.send({ message: "Tạo thành công tài khoản mới!" });
+  //           return;
+  //         });
+  //       }
+  //     );
+  //   } else {
+  //     Role.findOne({ name: "user" }, (err, role) => {
+  //       if (err) {
+  //         res.status(500).send({ message: err });
+  //         return;
+  //       }
 
-          res.send({ message: "Tạo thành công tài khoản mới!" });
-          return;
-        });
-      });
-    }
-  });
+  //       user.roles = [role._id];
+  //       user.save((err) => {
+  //         if (err) {
+  //           res.status(500).send({ message: err });
+  //           return;
+  //         }
+
+  //         res.send({ message: "Tạo thành công tài khoản mới!" });
+  //         return;
+  //       });
+  //     });
+  //   }
+  // });
 };
 
 exports.signin = (req, res) => {
@@ -108,4 +112,13 @@ exports.signin = (req, res) => {
         accessToken: token,
       });
     });
+};
+
+exports.signout = async (req, res) => {
+  try {
+    req.session = null;
+    return res.status(200).send({ message: "Bạn đã đăng xuất khỏi hệ thống!" });
+  } catch (err) {
+    this.next(err);
+  }
 };

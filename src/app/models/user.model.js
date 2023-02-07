@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const User = new mongoose.Schema(
   {
+    fullname: {
+      required: true,
+      type: String,
+    },
     username: {
       required: true,
       type: String,
@@ -14,12 +18,10 @@ const User = new mongoose.Schema(
       required: true,
       type: String,
     },
-    roles: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Role",
-      },
-    ],
+    roles: {
+      required: true,
+      type: Array,
+    },
    
   },
   { timestamps: true }

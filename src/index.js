@@ -1,11 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const dbConfig = require("./app/config/db.config");
+const cookieSession = require("cookie-session");
 
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:8081",
 };
 
 app.use(cors());
@@ -15,6 +16,14 @@ app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  cookieSession({
+    name: "senvang-session",
+    secret: "COOKIE_SECRET", // should use as secret environment variable
+    httpOnly: true,
+  })
+);
 
 const db = require("./app/models");
 const Role = db.role;
@@ -41,6 +50,7 @@ app.get("/", (req, res) => {
 // routes
 require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
+require("./app/routes/role.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
@@ -52,8 +62,9 @@ function initial() {
   Role.estimatedDocumentCount((err, count) => {
     if (!err && count === 0) {
       new Role({
-        name: "user"
-      }).save(err => {
+        value: "User",
+        label: "Người dùng",
+      }).save((err) => {
         if (err) {
           console.log("error", err);
         }
@@ -62,23 +73,25 @@ function initial() {
       });
 
       new Role({
-        name: "moderator"
-      }).save(err => {
-        if (err) {
-          console.log("error", err);
-        }
-
-        console.log("added 'moderator' to roles collection");
-      });
-
-      new Role({
-        name: "admin"
-      }).save(err => {
+        value: "Admin",
+        label: "Quản trị viên",
+      }).save((err) => {
         if (err) {
           console.log("error", err);
         }
 
         console.log("added 'admin' to roles collection");
+      });
+
+      new Role({
+        value: "Guest",
+        label: "Khách hàng",
+      }).save((err) => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'guest' to roles collection");
       });
     }
   });
