@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const dbConfig = require("./app/config/db.config");
+const dbConfig = require("./config/db.config");
 const cookieSession = require("cookie-session");
+const bodyParser = require("body-parser");
 
 const app = express();
 
@@ -10,6 +11,11 @@ var corsOptions = {
 };
 
 app.use(cors());
+
+app.use('/public', express.static('public'));
+
+// Configurations for "body-parser"
+app.use(bodyParser.urlencoded({extended: true}))
 
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -25,8 +31,10 @@ app.use(
   })
 );
 
-const db = require("./app/models");
+const db = require("./models");
 const Role = db.role;
+
+db.mongoose.set("strictQuery", false);
 
 db.mongoose
   .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
@@ -48,9 +56,10 @@ app.get("/", (req, res) => {
 });
 
 // routes
-require("./app/routes/auth.routes")(app);
-require("./app/routes/user.routes")(app);
-require("./app/routes/role.routes")(app);
+require("./routes/auth.routes")(app);
+require("./routes/user.routes")(app);
+require("./routes/role.routes")(app);
+require("./routes/upload.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
