@@ -14,14 +14,8 @@ const User = new mongoose.Schema(
       required: true,
       type: String,
     },
-    roles: {
-      required: true,
-      type: Array,
-    },
-    avatar: {
-      required: true,
-      type: String,
-    },
+    roles: Array,
+    photo: String,
     password: {
       required: true,
       type: String,
@@ -29,5 +23,13 @@ const User = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+User.set('toJSON', {
+  transform: (document, returnedObj) => {
+    returnedObj.id = returnedObj._id.toString();
+    delete returnedObj._id;
+    delete returnedObj.__v;
+  },
+});
 
 module.exports = mongoose.model("User", User);

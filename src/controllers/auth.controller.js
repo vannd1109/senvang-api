@@ -5,34 +5,71 @@ const Role = db.role;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-const { upload } = require("./file.controller");
 
 exports.signup = async (req, res) => {
-  const url = req.protocol + '://' + req.get('host');
-  console.log(req);
-  // const user = new User({
-  //   fullname: req.body.fullname,
-  //   username: req.body.username,
-  //   email: req.body.email,
-  //   roles: req.body.roles,
-  //   avatar: url + '/public/' + req.body.avatar,
-  //   password: bcrypt.hashSync(req.body.password, 8),
-  // });
+  try {
+    const body = req.body;
 
-  // await upload(user, res);
+    let img = "";
 
+    if (req.file) {
+      img =
+        req.protocol +
+        "://" +
+        req.get("host") +
+        "/uploads/" +
+        req.file.filename;
+    } else {
+      img = req.protocol + "://" + req.get("host") + "/uploads/default.png";
+    }
 
-  // console.log(user);
+    User.findOne({
+      username: body.username,
+    }).exec((err, u) => {
+      if (err) {
+        res.status(500).send({ message: err });
+        return;
+      }
 
-  // user.save((err, user) => {
-  //   if (err) {
-  //     res.status(500).send({ message: err });
-  //     return;
-  //   } else {
-  //     res.send({ message: "Tạo thành công tài khoản mới!" });
-  //     return;
-  //   }
-  // });
+      if (u) {
+        res.status(400).send({ message: "Tên đăng nhập đã tồn tại!!" });
+        return;
+      }
+
+      // Email
+      User.findOne({
+        email: body.email,
+      }).exec((err, u) => {
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        }
+
+        if (u) {
+          res.status(400).send({ message: "Email đã được sử dụng!" });
+          return;
+        } else {
+          const user = new User({
+            fullname: body.fullname,
+            username: body.username,
+            email: body.email,
+            roles: body.roles || ["User"],
+            password: bcrypt.hashSync(body.password, 8),
+            photo: img,
+          });
+          user.save( (err, user) => {
+            if (err) {
+               res.status(500).send({ message: err });
+            } else {
+               res.send({ message: "Tạo thành công tài khoản mới!" });
+            }
+          });
+        }
+      });
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 exports.signin = (req, res) => {
@@ -58,7 +95,7 @@ exports.signin = (req, res) => {
       if (!passwordIsValid) {
         return res.status(401).send({
           accessToken: null,
-          message: "Invalid Password!",
+          message: "Mật khẩu không đúng!",
         });
       }
 
@@ -78,6 +115,7 @@ exports.signin = (req, res) => {
         username: user.username,
         email: user.email,
         roles: authorities,
+        photo: user.photo,
         accessToken: token,
       });
     });

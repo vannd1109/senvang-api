@@ -3,6 +3,9 @@ const cors = require("cors");
 const dbConfig = require("./config/db.config");
 const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
+const path = require("path");
+
+const db = require("./models");
 
 const app = express();
 
@@ -12,10 +15,11 @@ var corsOptions = {
 
 app.use(cors());
 
-app.use('/public', express.static('public'));
+// Static Folder
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Configurations for "body-parser"
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -31,7 +35,6 @@ app.use(
   })
 );
 
-const db = require("./models");
 const Role = db.role;
 
 db.mongoose.set("strictQuery", false);
@@ -59,7 +62,6 @@ app.get("/", (req, res) => {
 require("./routes/auth.routes")(app);
 require("./routes/user.routes")(app);
 require("./routes/role.routes")(app);
-require("./routes/upload.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
