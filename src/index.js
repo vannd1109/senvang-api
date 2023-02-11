@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require('body-parser')
 const dbConfig = require("./config/db.config");
 const cookieSession = require("cookie-session");
-const bodyParser = require("body-parser");
 const path = require("path");
 
 const db = require("./models");
@@ -15,11 +15,14 @@ var corsOptions = {
 
 app.use(cors());
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
 // Static Folder
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
-
-// Configurations for "body-parser"
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -62,6 +65,7 @@ app.get("/", (req, res) => {
 require("./routes/auth.routes")(app);
 require("./routes/user.routes")(app);
 require("./routes/role.routes")(app);
+require("./routes/media.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
