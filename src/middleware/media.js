@@ -8,9 +8,12 @@ function Convert(string){
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const title = req.body.title;
-    fs.mkdirsSync('./uploads/media/'+ Convert(req.body.title).replaceAll(' ','-').toLowerCase());
+
+    destDir = './uploads/media/'+ Convert(title).replaceAll(' ','-').toLowerCase();
+
+    fs.mkdirsSync(destDir);
     
-    cb(null, './uploads/media/'+ Convert(req.body.title).replaceAll(' ','-').toLowerCase());
+    cb(null, destDir);
   },
   filename: (req, file, cb) => {
     cb(
