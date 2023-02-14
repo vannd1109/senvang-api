@@ -1,4 +1,3 @@
-const multiparty = require("multiparty");
 const db = require("../models");
 const Media = db.media;
 
