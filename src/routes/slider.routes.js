@@ -1,5 +1,5 @@
 const controller = require("../controllers/slider.controller");
-// const  upload = require("../middleware/media");
+const  upload = require("../middleware/slider");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -9,7 +9,7 @@ module.exports = function (app) {
     );
     next();
   });
-//   app.post("/api/media/add", upload.any("album"), controller.add);
+  app.post("/api/sliders/add", upload.any("slider"), controller.add);
 
   app.get("/api/sliders", controller.getAllSlider);
 

@@ -1,34 +1,35 @@
 const db = require("../models");
 const Slider = db.slider;
+const path = require("path");
+const fs = require('fs');
+const { log } = require("console");
 
-// exports.add = (req, res) => {
-//   try {
-//     const body = req.body;
+function Convert(string) {
+  return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
 
-//     const files = req.files;
+exports.add = async (req, res) => {
+  try {
+    const body = req.body;
+    const file = req.files[0];
 
-//     for (let i = 0; i < files.length; i++) {
-//       const file = files[i];
-//       file["path"] =
-//         req.protocol + "://" + req.get("host") + "\\" + file["path"];
-//     }
+    const slider = new Slider({
+      title: body.title,
+      url: body.url,
+      img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
+    });
 
-//     const media = new Media({
-//       title: body.title,
-//       album: files,
-//     });
-
-//     media.save((err, media) => {
-//       if (err) {
-//         res.status(500).send({ message: err });
-//       } else {
-//         res.send({ message: "Thêm thành công bộ sưu tập mới!" });
-//       }
-//     });
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
+    slider.save((err, slider) => {
+      if (err) {
+        res.status(500).send({ message: err });
+      } else {
+        res.send({ message: "Thêm thành công bộ slider mới!" });
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 // exports.singleAlbum = (req, res) => {
 //   try {

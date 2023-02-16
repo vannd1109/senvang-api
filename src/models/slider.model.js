@@ -1,16 +1,15 @@
 const mongoose = require('mongoose');
 
 const sliderSchema = new mongoose.Schema({
+    title: {
+        required: true,
+        type: String
+    },
     img: {
         required: true,
         type: String
     },
     url: {
-        required: true,
-        type: String
-    },
-    link: String,
-    title: {
         required: true,
         type: String
     },
