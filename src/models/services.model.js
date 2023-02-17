@@ -1,25 +1,25 @@
 const mongoose = require("mongoose");
 
-const Banner = new mongoose.Schema({
+const Service = new mongoose.Schema({
   code: {
-    require: true,
+    required: true,
+    type: String,
+  },
+  name: {
+    required: true,
     type: String,
   },
   description: {
-    require: true,
+    required: true,
     type: String,
   },
   img: {
     required: true,
     type: String,
   },
-  page: {
-    required: true,
-    type: String,
-  },
 });
 
-Banner.set("toJSON", {
+Service.set("toJSON", {
   transform: (document, returnedObj) => {
     returnedObj.id = returnedObj._id.toString();
     delete returnedObj._id;
@@ -27,4 +27,4 @@ Banner.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Banner", Banner);
+module.exports = mongoose.model("Service", Service);

@@ -11,7 +11,7 @@ const Media = new mongoose.Schema(
   { timestamps: true }
 );
 
-Media.set('toJSON', {
+Media.set("toJSON", {
   transform: (document, returnedObj) => {
     returnedObj.id = returnedObj._id.toString();
     delete returnedObj._id;

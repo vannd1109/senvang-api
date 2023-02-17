@@ -2,11 +2,6 @@ const db = require("../models");
 const Slider = db.slider;
 const path = require("path");
 const fs = require('fs');
-const { log } = require("console");
-
-function Convert(string) {
-  return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
 
 exports.add = async (req, res) => {
   try {

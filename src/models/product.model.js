@@ -1,30 +1,30 @@
 const mongoose = require("mongoose");
+const CateProduct = require("./cateProduct.model");
 
-const User = new mongoose.Schema(
+const Product = new mongoose.Schema(
   {
-    fullname: {
+    code: {
       required: true,
       type: String,
     },
-    username: {
+    name: {
       required: true,
       type: String,
     },
-    email: {
-      required: true,
+    description: {
+      require: true,
       type: String,
     },
-    roles: Array,
-    photo: String,
-    password: {
-      required: true,
+    img: String,
+    cateId: {
+      require: true,
       type: String,
     },
   },
   { timestamps: true }
 );
 
-User.set("toJSON", {
+Product.set("toJSON", {
   transform: (document, returnedObj) => {
     returnedObj.id = returnedObj._id.toString();
     delete returnedObj._id;
@@ -32,4 +32,4 @@ User.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("User", User);
+module.exports = mongoose.model("Product", Product);

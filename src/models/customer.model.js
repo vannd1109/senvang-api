@@ -1,11 +1,23 @@
 const mongoose = require("mongoose");
 
-const Banner = new mongoose.Schema({
+const Customer = new mongoose.Schema({
   code: {
     require: true,
     type: String,
   },
-  description: {
+  fullname: {
+    require: true,
+    type: String,
+  },
+  company: {
+    require: true,
+    type: String,
+  },
+  phone: {
+    require: true,
+    type: String,
+  },
+  email: {
     require: true,
     type: String,
   },
@@ -13,13 +25,9 @@ const Banner = new mongoose.Schema({
     required: true,
     type: String,
   },
-  page: {
-    required: true,
-    type: String,
-  },
 });
 
-Banner.set("toJSON", {
+Customer.set("toJSON", {
   transform: (document, returnedObj) => {
     returnedObj.id = returnedObj._id.toString();
     delete returnedObj._id;
@@ -27,4 +35,4 @@ Banner.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Banner", Banner);
+module.exports = mongoose.model("Customer", Customer);

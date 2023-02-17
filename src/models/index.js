@@ -5,10 +5,17 @@ const db = {};
 
 db.mongoose = mongoose;
 
-db.user = require("./user.model");
 db.role = require("./role.model");
-db.media = require("./media.model");
+db.user = require("./user.model");
+db.customer = require("./customer.model");
+db.cateProduct = require("./cateProduct.model");
+db.product = require("./product.model");
 db.slider = require("./slider.model");
+db.banner = require("./banner.model");
+db.cateNew = require("./cateNew.model");
+db.new = require("./new.model");
+db.media = require("./media.model");
+db.service = require("./services.model");
 
 db.ROLES = ["admin", "user", "guest"];
 

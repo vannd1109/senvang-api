@@ -1,18 +1,29 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const sliderSchema = new mongoose.Schema({
+const Slider = new mongoose.Schema(
+  {
     title: {
-        required: true,
-        type: String
+      required: true,
+      type: String,
     },
     img: {
-        required: true,
-        type: String
+      required: true,
+      type: String,
     },
     url: {
-        required: true,
-        type: String
+      required: true,
+      type: String,
     },
-}, {timestamps: true})
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('Slider', sliderSchema)
+Slider.set("toJSON", {
+  transform: (document, returnedObj) => {
+    returnedObj.id = returnedObj._id.toString();
+    delete returnedObj._id;
+    delete returnedObj.__v;
+  },
+});
+
+module.exports = mongoose.model("Slider", Slider);

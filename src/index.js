@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require('body-parser')
+const bodyParser = require("body-parser");
 const dbConfig = require("./config/db.config");
 const cookieSession = require("cookie-session");
 const path = require("path");
@@ -16,10 +16,10 @@ var corsOptions = {
 app.use(cors());
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 // Static Folder
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
@@ -62,11 +62,18 @@ app.get("/", (req, res) => {
 });
 
 // routes
+require("./routes/role.routes")(app);
 require("./routes/auth.routes")(app);
 require("./routes/user.routes")(app);
-require("./routes/role.routes")(app);
-require("./routes/media.routes")(app);
+require("./routes/customer.routes")(app);
+require("./routes/cateProduct.routes")(app);
+require("./routes/product.routes")(app);
 require("./routes/slider.routes")(app);
+require("./routes/banner.routes")(app);
+require("./routes/cateNew.routes")(app);
+require("./routes/new.routes")(app);
+require("./routes/media.routes")(app);
+require("./routes/service.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
