@@ -10,8 +10,10 @@ const CateProduct = new mongoose.Schema(
       required: true,
       type: String,
     },
-    description: String,
-    img: String,
+    img: {
+      required: true,
+      type: String,
+    },
   },
   { timestamps: true }
 );

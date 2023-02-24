@@ -1,10 +1,4 @@
-const { log } = require("console");
 const multer = require("multer");
-const path = require('path');
-
-function Convert(string) {
-  return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

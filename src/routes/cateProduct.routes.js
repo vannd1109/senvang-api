@@ -1,4 +1,5 @@
 const controller = require("../controllers/cateProduct.controller");
+const  upload = require("../middleware/cateProduct");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -9,5 +10,7 @@ module.exports = function (app) {
     next();
   });
 
+  app.post("/api/cate-product/add", upload.any("cate-product"), controller.add);
   app.get("/api/cate-product", controller.getAllCateProduct);
+  app.get("/api/cate-product/:id", controller.singleProduct);
 };

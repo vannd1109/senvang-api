@@ -15,7 +15,10 @@ const Product = new mongoose.Schema(
       require: true,
       type: String,
     },
-    img: String,
+    img: {
+      require: true,
+      type: String,
+    },
     cateId: {
       require: true,
       type: String,

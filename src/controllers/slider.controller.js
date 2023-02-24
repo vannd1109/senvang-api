@@ -1,7 +1,5 @@
 const db = require("../models");
 const Slider = db.slider;
-const path = require("path");
-const fs = require('fs');
 
 exports.add = async (req, res) => {
   try {
