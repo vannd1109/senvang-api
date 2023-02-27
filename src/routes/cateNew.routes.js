@@ -1,4 +1,5 @@
 const controller = require("../controllers/cateNew.controller");
+const  upload = require("../middleware/cateNew");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -10,4 +11,5 @@ module.exports = function (app) {
   });
 
   app.get("/api/cate-new", controller.getAllCateNew);
+  app.post("/api/cate-new/add", upload.any("cate-new"), controller.add);
 };

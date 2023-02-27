@@ -1,29 +1,29 @@
 const mongoose = require("mongoose");
 
-const New = new mongoose.Schema({
-  code: {
-    required: true,
-    type: String,
+const News = new mongoose.Schema(
+  {
+    code: {
+      required: true,
+      type: String,
+    },
+    name: {
+      required: true,
+      type: String,
+    },
+    description: String,
+    img: {
+      required: true,
+      type: String,
+    },
+    cateId: {
+      require: true,
+      type: String,
+    },
   },
-  name: {
-    required: true,
-    type: String,
-  },
-  description: {
-    required: true,
-    type: String,
-  },
-  img: {
-    required: true,
-    type: String,
-  },
-  cateId: {
-    require: true,
-    type: String,
-  },
-});
+  { timestamps: true }
+);
 
-New.set("toJSON", {
+News.set("toJSON", {
   transform: (document, returnedObj) => {
     returnedObj.id = returnedObj._id.toString();
     delete returnedObj._id;
@@ -31,4 +31,4 @@ New.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("New", New);
+module.exports = mongoose.model("News", News);

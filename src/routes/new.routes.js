@@ -1,4 +1,5 @@
 const controller = require("../controllers/new.controller");
+const upload = require("../middleware/new")
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -10,4 +11,5 @@ module.exports = function (app) {
   });
 
   app.get("/api/news", controller.getAllNew);
+  app.post("/api/news/add", upload.any("news"), controller.add);
 };
