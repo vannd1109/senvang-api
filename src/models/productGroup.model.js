@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Product = new mongoose.Schema(
+const ProductGroup = new mongoose.Schema(
   {
     code: {
       required: true,
@@ -10,20 +10,19 @@ const Product = new mongoose.Schema(
       required: true,
       type: String,
     },
-    description: String,
     img: {
       require: true,
       type: String,
     },
-    cateId: {
+    items: {
       require: true,
-      type: String,
+      type: Array,
     },
   },
   { timestamps: true }
 );
 
-Product.set("toJSON", {
+ProductGroup.set("toJSON", {
   transform: (document, returnedObj) => {
     returnedObj.id = returnedObj._id.toString();
     delete returnedObj._id;
@@ -31,4 +30,4 @@ Product.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Product", Product);
+module.exports = mongoose.model("ProductGroup", ProductGroup);

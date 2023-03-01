@@ -50,9 +50,11 @@ exports.add = async (req, res) => {
 exports.singleProduct = async (req, res) => {
   try {
     CateProduct.findOne({_id: req.params.id}, function(err, result) {
-      if (err) throw err;
-      return res.json(result);
+      console.log(result);
+      // if (err) throw err;
+      // return res.json(result);
     });
+    console.log(req.params.id);
   } catch (error) {
     console.log(error.message);
   }

@@ -13,5 +13,5 @@ module.exports = function (app) {
 
   app.get("/api/media/all", controller.getAllMedia);
 
-  app.get("/api/media/:id", controller.singleAlbum)
+  app.get("/api/media/:id", controller.singleAlbum);
 };

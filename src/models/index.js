@@ -10,6 +10,7 @@ db.user = require("./user.model");
 db.customer = require("./customer.model");
 db.cateProduct = require("./cateProduct.model");
 db.product = require("./product.model");
+db.productGroup = require("./productGroup.model");
 db.slider = require("./slider.model");
 db.banner = require("./banner.model");
 db.cateNew = require("./cateNew.model");
