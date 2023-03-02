@@ -11,7 +11,7 @@ module.exports = function (app) {
   });
   app.post("/api/product-group/add", upload.any("product-group"), controller.add);
 
-  app.get("/api/product-group/all", controller.getAllProductGroup);
+  app.get("/api/product-group", controller.getAllProductGroup);
 
   app.get("/api/product-group/:id", controller.singleProductGroup);
 };

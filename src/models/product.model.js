@@ -18,6 +18,7 @@ const Product = new mongoose.Schema(
     cateId: {
       require: true,
       type: String,
+      ref:"cateproduct"
     },
   },
   { timestamps: true }

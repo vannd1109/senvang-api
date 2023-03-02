@@ -12,5 +12,6 @@ module.exports = function (app) {
 
   app.post("/api/cate-product/add", upload.any("cate-product"), controller.add);
   app.get("/api/cate-product", controller.getAllCateProduct);
-  app.get("/api/cate-product/:id", controller.singleProduct);
+  // app.get("/api/cate-product/:id", controller.singleProduct);
+  app.get("/api/cate-product/:id", controller.getAllProductByCateId);
 };

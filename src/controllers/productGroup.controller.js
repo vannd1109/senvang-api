@@ -5,20 +5,16 @@ exports.add = (req, res) => {
   try {
     const body = req.body;
 
-    const files = req.files;
+    const file = req.files[0];
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      file["path"] =
-        req.protocol + "://" + req.get("host") + "\\" + file["path"];
-    }
-
-    const media = new Media({
-      title: body.title,
-      album: files,
+    const productGroup = new ProductGroup({
+      code: body.code,
+      name: body.name,
+      items: body.items,
+      img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
     });
 
-    media.save((err, media) => {
+    productGroup.save((err, productGroup) => {
       if (err) {
         res.status(500).send({ message: err });
       } else {

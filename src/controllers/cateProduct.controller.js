@@ -1,5 +1,6 @@
 const db = require("../models");
 const CateProduct = db.cateProduct;
+const Product = db.product;
 
 exports.getAllCateProduct = (req, res) => {
   CateProduct.find({}, function (err, result) {
@@ -17,16 +18,19 @@ exports.add = async (req, res) => {
     if (file) {
       img = req.protocol + "://" + req.get("host") + "\\" + file["path"];
     } else {
-      img = req.protocol + "://" + req.get("host") + "/uploads/cate-product/default.jpg";
+      img =
+        req.protocol +
+        "://" +
+        req.get("host") +
+        "/uploads/cate-product/default.jpg";
     }
-    
 
     const cateProduct = new CateProduct({
       code: body.code,
       name: body.name,
       description: body.description,
       // img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
-      img: img
+      img: img,
     });
 
     cateProduct.save((err, cateProduct) => {
@@ -36,25 +40,43 @@ exports.add = async (req, res) => {
         res.send({ message: "Thêm thành công danh mục sản phẩm mới!" });
       }
     });
-
-
-  } catch (error) {
-    
-  }
-  // CateProduct.find({}, function (err, result) {
-  //   if (err) throw err;
-  //   return res.json(result);
-  // });
+  } catch (error) {}
 };
 
 exports.singleProduct = async (req, res) => {
   try {
-    CateProduct.findOne({_id: req.params.id}, function(err, result) {
-      console.log(result);
-      // if (err) throw err;
-      // return res.json(result);
+    CateProduct.findOne({ _id: req.params.id }, function (err, result) {
+      if (err) throw err;
+      return res.json(result);
     });
-    console.log(req.params.id);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.getAllProductByCateId = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await Product.aggregate([
+      {
+        $lookup: {
+          from: "cateproducts",
+          localField: "_id",
+          foreignField: "cateId",
+          as: "productList",
+        },
+      },
+      { $match: { cateId: id } },
+      {
+        $project: {
+          code: 1,
+          name: 1,
+          img: 1,
+        },
+      },
+    ]);
+
+    return res.json(result);
   } catch (error) {
     console.log(error.message);
   }
