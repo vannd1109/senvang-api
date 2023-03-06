@@ -1,7 +1,7 @@
 const db = require("../models");
 const Slider = db.slider;
 
-exports.add = async (req, res) => {
+exports.add = (req, res) => {
   try {
     const body = req.body;
     const file = req.files[0];
@@ -16,7 +16,7 @@ exports.add = async (req, res) => {
       if (err) {
         res.status(500).send({ message: err });
       } else {
-        res.send({ message: "Thêm thành công bộ slider mới!" });
+        res.send({ message: "Thêm thành công slider mới!" });
       }
     });
   } catch (error) {

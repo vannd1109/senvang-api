@@ -6,6 +6,10 @@ const Media = new mongoose.Schema(
       required: true,
       type: String,
     },
+    img: {
+      required: true,
+      type: String,
+    },
     album: Array,
   },
   { timestamps: true }
