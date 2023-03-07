@@ -1,5 +1,6 @@
 const { authJwt } = require("../middleware/index");
 const controller = require("../controllers/user.controller");
+const upload = require("../middleware/account");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -30,4 +31,6 @@ module.exports = function (app) {
     controller.guestBoard
   );
   app.get("/api/users/all", controller.getAllUser);
+  app.get("/api/users/view/:id", controller.getUserById);
+  app.post("/api/users/edit",upload.single("photo"), controller.edit);
 };

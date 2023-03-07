@@ -17,10 +17,10 @@ exports.signup = async (req, res) => {
         req.protocol +
         "://" +
         req.get("host") +
-        "/uploads/" +
+        "/uploads/account/" +
         req.file.filename;
     } else {
-      img = req.protocol + "://" + req.get("host") + "/uploads/default.png";
+      img = req.protocol + "://" + req.get("host") + "/uploads/account/default.png";
     }
 
     User.findOne({
@@ -53,10 +53,11 @@ exports.signup = async (req, res) => {
             fullname: body.fullname,
             username: body.username,
             email: body.email,
-            roles: body.roles || ["User"],
+            role: body.role,
             password: bcrypt.hashSync(body.password, 8),
             photo: img,
           });
+
           user.save( (err, user) => {
             if (err) {
                res.status(500).send({ message: err });
@@ -76,8 +77,9 @@ exports.signin = (req, res) => {
   User.findOne({
     username: req.body.username,
   })
-    .populate("roles", "-__v")
+    .populate("role")
     .exec((err, user) => {
+
       if (err) {
         res.status(500).send({ message: err });
         return;
@@ -103,18 +105,14 @@ exports.signin = (req, res) => {
         expiresIn: 86400, // 24 hours
       });
 
-      const authorities = [];
-
-      for (let i = 0; i < user.roles.length; i++) {
-        authorities.push("ROLE_" + user.roles[i].toUpperCase());
-      }
+      const _role = "ROLE_" + user.role.toUpperCase();
 
       res.status(200).send({
         id: user._id,
         fullname: user.fullname,
         username: user.username,
         email: user.email,
-        roles: authorities,
+        role: _role,
         photo: user.photo,
         accessToken: token,
       });

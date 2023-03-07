@@ -14,7 +14,10 @@ const User = new mongoose.Schema(
       required: true,
       type: String,
     },
-    roles: Array,
+    role: {
+      required: true,
+      type: String,
+    },
     photo: String,
     password: {
       required: true,

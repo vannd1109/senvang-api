@@ -1,5 +1,5 @@
 const controller = require("../controllers/auth.controller");
-const upload = require("../middleware/upload");
+const upload = require("../middleware/account");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
