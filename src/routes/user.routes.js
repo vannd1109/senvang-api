@@ -33,4 +33,5 @@ module.exports = function (app) {
   app.get("/api/users/all", controller.getAllUser);
   app.get("/api/users/view/:id", controller.getUserById);
   app.post("/api/users/edit",upload.single("photo"), controller.edit);
+  app.post("/api/users/delete", controller.delete);
 };

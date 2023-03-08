@@ -20,7 +20,7 @@ exports.guestBoard = (req, res) => {
 };
 
 exports.getAllUser = (req, res) => {
-  User.find({}, function(err, result) {
+  User.find({}, function (err, result) {
     if (err) throw err;
     return res.json(result);
   });
@@ -28,7 +28,7 @@ exports.getAllUser = (req, res) => {
 
 exports.getUserById = (req, res) => {
   const _id = req.params.id;
-  User.find({_id: _id}, function(err, result) {
+  User.find({ _id: _id }, function (err, result) {
     if (err) throw err;
     const user = result[0];
     const _result = {
@@ -42,72 +42,51 @@ exports.getUserById = (req, res) => {
   });
 };
 
-
 exports.edit = async (req, res) => {
   try {
     const body = req.body;
-    const file = req.files;
 
     let img = "";
 
-    console.log(body);
-
-    if (req.file) {
+    if (body.photo) {
+      img = body.photo;
+    } else {
       img =
         req.protocol +
         "://" +
         req.get("host") +
         "/uploads/account/" +
         req.file.filename;
-    } else {
-      img = req.protocol + "://" + req.get("host") + "/uploads/account/default.png";
     }
+    const id = body.id;
 
-    // User.findOne({
-    //   username: body.username,
-    // }).exec((err, u) => {
-    //   if (err) {
-    //     res.status(500).send({ message: err });
-    //     return;
-    //   }
+    User.findById(id, (err, user) => {
+      if (err) {
+        res.status(500).send({ message: err });
+      }
+      user.fullname = body.fullname;
+      user.email = body.email;
+      user.role = body.role;
+      user.photo = img;
 
-    //   if (u) {
-    //     res.status(400).send({ message: "Tên đăng nhập đã tồn tại!!" });
-    //     return;
-    //   }
+      user.save();
+      res.send({ message: "Cập nhật thông tin thành công!" });
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-    //   // Email
-    //   User.findOne({
-    //     email: body.email,
-    //   }).exec((err, u) => {
-    //     if (err) {
-    //       res.status(500).send({ message: err });
-    //       return;
-    //     }
+exports.delete = async (req, res) => {
+  try {
+    const id = req.body.id;
 
-    //     if (u) {
-    //       res.status(400).send({ message: "Email đã được sử dụng!" });
-    //       return;
-    //     } else {
-    //       const user = new User({
-    //         fullname: body.fullname,
-    //         username: body.username,
-    //         email: body.email,
-    //         role: body.role,
-    //         password: bcrypt.hashSync(body.password, 8),
-    //         photo: img,
-    //       });
-
-    //       user.save( (err, user) => {
-    //         if (err) {
-    //            res.status(500).send({ message: err });
-    //         } else {
-    //            res.send({ message: "Tạo thành công tài khoản mới!" });
-    //         }
-    //       });
-    //     }
-    //   });
-    // });
+    User.findByIdAndDelete(id, function (err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }
+      res.send({ message: "Xóa thành công!" });
+    });
   } catch (error) {
     console.log(error.message);
   }

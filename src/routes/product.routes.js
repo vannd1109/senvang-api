@@ -1,5 +1,5 @@
 const controller = require("../controllers/product.controller");
-const  upload = require("../middleware/product");
+const upload = require("../middleware/product");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -12,4 +12,6 @@ module.exports = function (app) {
 
   app.get("/api/products", controller.getAllProduct);
   app.post("/api/products/add", upload.any("product"), controller.add);
+  app.get("/api/products/view/:id", controller.getProductById);
+  app.post("/api/products/edit", upload.any("product"), controller.edit);
 };

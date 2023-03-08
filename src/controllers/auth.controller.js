@@ -107,6 +107,8 @@ exports.signin = (req, res) => {
 
       const _role = "ROLE_" + user.role.toUpperCase();
 
+      console.log(_role);
+
       res.status(200).send({
         id: user._id,
         fullname: user.fullname,
