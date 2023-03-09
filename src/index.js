@@ -70,7 +70,7 @@ require("./routes/cateProduct.routes")(app);
 require("./routes/product.routes")(app);
 require("./routes/productGroup.routes")(app);
 require("./routes/slider.routes")(app);
-require("./routes/banner.routes")(app);
+require("./routes/page.routes")(app);
 require("./routes/cateNew.routes")(app);
 require("./routes/new.routes")(app);
 require("./routes/media.routes")(app);

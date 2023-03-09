@@ -10,8 +10,8 @@ module.exports = function (app) {
     next();
   });
   app.post("/api/sliders/add", upload.any("slider"), controller.add);
-
   app.get("/api/sliders", controller.getAllSlider);
-
-//   app.get("/api/media/:id", controller.singleAlbum)
+  app.get("/api/sliders/view/:id", controller.singleSlider);
+  app.post("/api/sliders/edit", upload.any("slider"), controller.edit);
+  app.post("/api/sliders/delete", controller.delete);
 };

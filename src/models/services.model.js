@@ -9,10 +9,7 @@ const Service = new mongoose.Schema({
     required: true,
     type: String,
   },
-  description: {
-    required: true,
-    type: String,
-  },
+  description: String,
   img: {
     required: true,
     type: String,

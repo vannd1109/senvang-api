@@ -12,4 +12,6 @@ module.exports = function (app) {
 
   app.get("/api/news", controller.getAllNew);
   app.post("/api/news/add", upload.any("news"), controller.add);
+  app.get("/api/news/view/:id", controller.getNewById);
+  app.post("/api/news/edit", upload.any("news"), controller.edit);
 };

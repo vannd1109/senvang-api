@@ -82,19 +82,19 @@ exports.getAllProductByCateId = async (req, res) => {
   }
 };
 
-exports.getCateProductById = (req, res) => {
-  const _id = req.params.id;
-  CateProduct.find({ _id: _id }, function (err, result) {
-    if (err) throw err;
-    const cateProduct = result[0];
-    const _result = {
-      code: cateProduct.code,
-      name: cateProduct.name,
-      img: cateProduct.img,
-    };
-    return res.json(_result);
-  });
-};
+// exports.getCateProductById = (req, res) => {
+//   const _id = req.params.id;
+//   CateProduct.find({ _id: _id }, function (err, result) {
+//     if (err) throw err;
+//     const cateProduct = result[0];
+//     const _result = {
+//       code: cateProduct.code,
+//       name: cateProduct.name,
+//       img: cateProduct.img,
+//     };
+//     return res.json(_result);
+//   });
+// };
 
 exports.edit = async (req, res) => {
   try {

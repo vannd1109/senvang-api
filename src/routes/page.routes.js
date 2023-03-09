@@ -1,4 +1,4 @@
-const controller = require("../controllers/banner.controller");
+const controller = require("../controllers/page.controller");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -9,5 +9,5 @@ module.exports = function (app) {
     next();
   });
 
-  app.get("/api/banners", controller.getAllBanner);
+  app.get("/api/pages", controller.getAllPage);
 };
