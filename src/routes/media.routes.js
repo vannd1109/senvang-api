@@ -9,9 +9,7 @@ module.exports = function (app) {
     );
     next();
   });
-  app.post("/api/media/add", upload.any("album"), controller.add);
-
   app.get("/api/media/all", controller.getAllMedia);
-
+  app.post("/api/media/add", upload.any("album"), controller.add);
   app.get("/api/media/:id", controller.singleAlbum);
 };

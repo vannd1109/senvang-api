@@ -26,12 +26,13 @@ exports.add = (req, res) => {
       "://" +
       req.get("host") +
       "/uploads/media/" +
-      Convert(body.title).toLowerCase().replaceAll(" ","-") + "/" +
+      Convert(body.code).toLowerCase().replaceAll(" ","-") + "/" +
       file.filename;
 
     _album.shift();
 
     const media = new Media({
+      code: body.code,
       title: body.title,
       img: img,
       album: _album,

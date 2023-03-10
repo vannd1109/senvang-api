@@ -9,6 +9,17 @@ exports.getAllCateProduct = (req, res) => {
   });
 };
 
+exports.singleCateProduct = async (req, res) => {
+  try {
+    CateProduct.findOne({ _id: req.params.id }, function (err, result) {
+      if (err) throw err;
+      return res.json(result);
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 exports.add = async (req, res) => {
   try {
     const body = req.body;
@@ -41,17 +52,6 @@ exports.add = async (req, res) => {
       }
     });
   } catch (error) {}
-};
-
-exports.singleProduct = async (req, res) => {
-  try {
-    CateProduct.findOne({ _id: req.params.id }, function (err, result) {
-      if (err) throw err;
-      return res.json(result);
-    });
-  } catch (error) {
-    console.log(error.message);
-  }
 };
 
 exports.getAllProductByCateId = async (req, res) => {

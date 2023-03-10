@@ -8,6 +8,16 @@ exports.getAllNew = (req, res) => {
   });
 };
 
+exports.singleNew = (req, res) => {
+  try {
+    News.findOne({ _id: req.params.id }, function (err, result) {
+      if (err) throw err;
+      return res.json(result);
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 exports.add = (req, res) => {
   const body = req.body;
@@ -27,22 +37,6 @@ exports.add = (req, res) => {
     } else {
       res.send({ message: "Thêm thành công tin tức mới!" });
     }
-  });
-};
-
-exports.getNewById = (req, res) => {
-  const _id = req.params.id;
-  News.find({ _id: _id }, function (err, result) {
-    if (err) throw err;
-    const newItem = result[0];
-    const _result = {
-      code: newItem.code,
-      name: newItem.name,
-      description: newItem.description,
-      img: newItem.img,
-      cateId: newItem.cateId,
-    };
-    return res.json(_result);
   });
 };
 
@@ -77,6 +71,21 @@ exports.edit = async (req, res) => {
 
       news.save();
       res.send({ message: "Cập nhật thông tin thành công!" });
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.delete = async (req, res) => {
+  try {
+    const id = req.body.id;
+
+    News.findByIdAndDelete(id, function (err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }
+      res.send({ message: "Xóa thành công!" });
     });
   } catch (error) {
     console.log(error.message);

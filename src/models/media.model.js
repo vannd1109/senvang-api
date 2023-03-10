@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const Media = new mongoose.Schema(
   {
+    code: {
+      required: true,
+      type: String,
+    },
     title: {
       required: true,
       type: String,

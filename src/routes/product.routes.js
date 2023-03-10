@@ -12,6 +12,7 @@ module.exports = function (app) {
 
   app.get("/api/products", controller.getAllProduct);
   app.post("/api/products/add", upload.any("product"), controller.add);
-  app.get("/api/products/view/:id", controller.getProductById);
+  app.get("/api/products/view/:id", controller.singleProduct);
   app.post("/api/products/edit", upload.any("product"), controller.edit);
+  app.post("/api/products/delete", controller.delete);
 };

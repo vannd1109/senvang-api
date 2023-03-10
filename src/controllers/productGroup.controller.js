@@ -1,6 +1,28 @@
 const db = require("../models");
 const ProductGroup = db.productGroup;
 
+function Convert(string) {
+  return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+exports.getAllProductGroup = (req, res) => {
+  ProductGroup.find({}, function (err, result) {
+    if (err) throw err;
+    return res.json(result);
+  });
+};
+
+exports.singleProductGroup = (req, res) => {
+  try {
+    ProductGroup.findOne({ _id: req.params.id }, function (err, result) {
+      if (err) throw err;
+      return res.json(result);
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 exports.add = (req, res) => {
   try {
     const body = req.body;
@@ -25,44 +47,6 @@ exports.add = (req, res) => {
     console.log(error.message);
   }
 };
-
-exports.singleProductGroup = (req, res) => {
-  try {
-    ProductGroup.findOne({ _id: req.params.id }, function (err, result) {
-      if (err) throw err;
-      return res.json(result);
-    });
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-exports.getAllProductGroup = (req, res) => {
-  ProductGroup.find({}, function (err, result) {
-    if (err) throw err;
-    return res.json(result);
-  });
-};
-
-exports.getNewById = (req, res) => {
-  const _id = req.params.id;
-  News.find({ _id: _id }, function (err, result) {
-    if (err) throw err;
-    const newItem = result[0];
-    const _result = {
-      code: newItem.code,
-      name: newItem.name,
-      description: newItem.description,
-      img: newItem.img,
-      cateId: newItem.cateId,
-    };
-    return res.json(_result);
-  });
-};
-
-function Convert(string) {
-  return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
 
 exports.edit = async (req, res) => {
   try {
@@ -101,3 +85,20 @@ exports.edit = async (req, res) => {
     console.log(error.message);
   }
 };
+
+exports.delete = async (req, res) => {
+  try {
+    const id = req.body.id;
+
+    ProductGroup.findByIdAndDelete(id, function (err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }
+      res.send({ message: "Xóa thành công!" });
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+

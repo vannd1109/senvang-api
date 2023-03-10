@@ -13,6 +13,6 @@ module.exports = function (app) {
   app.post("/api/cate-product/add", upload.any("cate-product"), controller.add);
   app.get("/api/cate-product", controller.getAllCateProduct);
   app.get("/api/cate-product/:id", controller.getAllProductByCateId);
-  app.get("/api/cate-product/view/:id", controller.singleProduct);
+  app.get("/api/cate-product/view/:id", controller.singleCateProduct);
   app.post("/api/cate-product/edit",upload.any("cate-product"), controller.edit);
 };

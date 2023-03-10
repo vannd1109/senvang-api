@@ -8,6 +8,18 @@ exports.getAllCateNew = (req, res) => {
   });
 };
 
+exports.singleCateNew= (req, res) => {
+  try {
+    CateNew.findOne({ _id: req.params.id }, function (err, result) {
+      if (err) throw err;
+      console.log(result);
+      return res.json(result);
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 exports.add = async (req, res) => {
   try {
     const body = req.body;
@@ -43,20 +55,6 @@ exports.add = async (req, res) => {
   //   if (err) throw err;
   //   return res.json(result);
   // });
-};
-
-exports.getCateNewById = (req, res) => {
-  const _id = req.params.id;
-  CateNew.find({ _id: _id }, function (err, result) {
-    if (err) throw err;
-    const cateNew = result[0];
-    const _result = {
-      code: cateNew.code,
-      name: cateNew.name,
-      img: cateNew.img,
-    };
-    return res.json(_result);
-  });
 };
 
 exports.edit = async (req, res) => {

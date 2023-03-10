@@ -8,6 +8,17 @@ exports.getAllProduct = (req, res) => {
   });
 };
 
+exports.singleProduct = async (req, res) => {
+  try {
+    Product.findOne({ _id: req.params.id }, function (err, result) {
+      if (err) throw err;
+      return res.json(result);
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 exports.add = (req, res) => {
   const body = req.body;
   const file = req.files[0];
@@ -29,22 +40,6 @@ exports.add = (req, res) => {
   });
 };
 
-exports.getProductById = (req, res) => {
-  const _id = req.params.id;
-  Product.find({ _id: _id }, function (err, result) {
-    if (err) throw err;
-    const product = result[0];
-    const _result = {
-      code: product.code,
-      name: product.name,
-      description: product.description,
-      img: product.img,
-      cateId: product.cateId,
-    };
-    return res.json(_result);
-  });
-};
-
 exports.edit = async (req, res) => {
   try {
     const body = req.body;
@@ -59,7 +54,7 @@ exports.edit = async (req, res) => {
         req.protocol +
         "://" +
         req.get("host") +
-        "/uploads/products/" +
+        "/uploads/product/" +
         file.filename;
     }
     const id = body.id;
@@ -76,6 +71,21 @@ exports.edit = async (req, res) => {
 
       product.save();
       res.send({ message: "Cập nhật thông tin thành công!" });
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.delete = async (req, res) => {
+  try {
+    const id = req.body.id;
+
+    Product.findByIdAndDelete(id, function (err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }
+      res.send({ message: "Xóa thành công!" });
     });
   } catch (error) {
     console.log(error.message);

@@ -11,7 +11,8 @@ module.exports = function (app) {
   });
 
   app.get("/api/news", controller.getAllNew);
+  app.get("/api/news/view/:id", controller.singleNew);
   app.post("/api/news/add", upload.any("news"), controller.add);
-  app.get("/api/news/view/:id", controller.getNewById);
   app.post("/api/news/edit", upload.any("news"), controller.edit);
+  app.post("/api/news/delete", controller.delete);
 };
