@@ -1,4 +1,7 @@
-const { fields } = require("../middleware/media");
+const fs = require("fs");
+const path = require("path");
+const { dirname } = require("path");
+const process = require('process');
 const db = require("../models");
 const Media = db.media;
 
@@ -31,6 +34,8 @@ exports.add = (req, res) => {
     const files = req.files;
     const file = req.files[0];
     const _album = [...files];
+
+    
 
     let img = "";
 
@@ -76,10 +81,12 @@ exports.edit = async (req, res) => {
     const file = req.files[0];
     const body = req.body;
 
+    console.log(process.cwd());
+
     let album = [];
     let img = "";
 
-    if(files.length > 0) {
+    if (files.length > 0) {
       album = [...files];
 
       for (let i = 0; i < files.length; i++) {
@@ -88,7 +95,7 @@ exports.edit = async (req, res) => {
           req.protocol + "://" + req.get("host") + "\\" + file["path"];
       }
       album.unshift();
-    }else {
+    } else {
       album = [...body.album];
     }
 
@@ -118,6 +125,38 @@ exports.edit = async (req, res) => {
 
       media.save();
       res.send({ message: "Cập nhật thông tin thành công!" });
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.delete = async (req, res) => {
+  try {
+    const id = req.body.id;
+
+    Media.findOne({ _id: id }, function async(err, res) {
+      if (err) throw err;
+        process.chdir("uploads");
+        process.chdir("media");
+
+        fs.rmdir(process.cwd() + "\\" + res.code.toLowerCase(), { recursive: true, force: true }, (err) => {
+        if (err) {
+          return console.log("error occurred in deleting directory", err);
+        }
+        console.log("Directory deleted successfully");
+        process.chdir("../");
+        process.chdir("../");
+      });
+      return true;
+    });
+
+    Media.findByIdAndDelete(id, function (err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }
+      
+      res.send({ message: "Xóa thành công!" });
     });
   } catch (error) {
     console.log(error.message);

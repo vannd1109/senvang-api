@@ -82,20 +82,6 @@ exports.getAllProductByCateId = async (req, res) => {
   }
 };
 
-// exports.getCateProductById = (req, res) => {
-//   const _id = req.params.id;
-//   CateProduct.find({ _id: _id }, function (err, result) {
-//     if (err) throw err;
-//     const cateProduct = result[0];
-//     const _result = {
-//       code: cateProduct.code,
-//       name: cateProduct.name,
-//       img: cateProduct.img,
-//     };
-//     return res.json(_result);
-//   });
-// };
-
 exports.edit = async (req, res) => {
   try {
     const body = req.body;
@@ -103,9 +89,9 @@ exports.edit = async (req, res) => {
 
     let img = "";
 
-    if(body.img) {
-      img = body.img
-    }else {
+    if (body.img) {
+      img = body.img;
+    } else {
       img =
         req.protocol +
         "://" +
@@ -122,7 +108,7 @@ exports.edit = async (req, res) => {
       cate.code = body.code;
       cate.name = body.name;
       cate.img = img;
-
+      
       cate.save();
       res.send({ message: "Cập nhật thông tin thành công!" });
     });
@@ -135,12 +121,36 @@ exports.delete = async (req, res) => {
   try {
     const id = req.body.id;
 
-    CateProduct.findByIdAndDelete(id, function (err) {
-      if (err) {
-        res.status(500).send({ message: err });
-      }
-      res.send({ message: "Xóa thành công!" });
+    console.log(id);
+
+    CateProduct.findOne({ _id: id }, function async(err, res) {
+      if (err) throw err;
+      process.chdir("uploads");
+      process.chdir("cate-product");
+
+      console.log(process.cwd());
+
+      // fs.rmdir(
+      //   process.cwd() + "\\" + res.code.toLowerCase(),
+      //   { recursive: true, force: true },
+      //   (err) => {
+      //     if (err) {
+      //       return console.log("error occurred in deleting directory", err);
+      //     }
+      //     console.log("Directory deleted successfully");
+      //     process.chdir("../");
+      //     process.chdir("../");
+      //   }
+      // );
+      return true;
     });
+
+    // CateProduct.findByIdAndDelete(id, function (err) {
+    //   if (err) {
+    //     res.status(500).send({ message: err });
+    //   }
+    //   res.send({ message: "Xóa thành công!" });
+    // });
   } catch (error) {
     console.log(error.message);
   }

@@ -13,4 +13,5 @@ module.exports = function (app) {
   app.post("/api/media/add", upload.any("album"), controller.add);
   app.get("/api/media/:id", controller.singleAlbum);
   app.post("/api/media/edit", upload.any("album"), controller.edit);
+  app.post("/api/media/delete", controller.delete);
 };

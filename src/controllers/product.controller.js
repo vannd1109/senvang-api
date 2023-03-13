@@ -1,4 +1,6 @@
+const fs = require("fs");
 const db = require("../models");
+const process = require("process");
 const Product = db.product;
 
 exports.getAllProduct = (req, res) => {
@@ -59,6 +61,29 @@ exports.edit = async (req, res) => {
     }
     const id = body.id;
 
+    // Product.findOne({ _id: id }, function async(err, res) {
+    //   if (err) throw err;
+    //   process.chdir("uploads");
+    //   process.chdir("product");
+    //   const length = res.img.split("/").length;
+    //   const item = res.img.split("/")[length - 1];
+
+    //   // fs.rmSync(
+    //   //   process.cwd() + "\\" + item,
+    //   //   { recursive: true, force: true },
+    //   //   (err) => {
+    //   //     if (err) {
+    //   //       return console.log("error occurred in deleting file", err);
+    //   //     }
+    //   //     console.log("File deleted successfully");
+    //   //     process.chdir("../");
+    //   //     process.chdir("../");
+    //   //   }
+    //   // );
+
+    //   return true;
+    // });
+
     Product.findById(id, (err, product) => {
       if (err) {
         res.status(500).send({ message: err });
@@ -70,6 +95,8 @@ exports.edit = async (req, res) => {
       product.cateId = body.cateId;
 
       product.save();
+      // process.chdir("../");
+      // process.chdir("../");
       res.send({ message: "Cập nhật thông tin thành công!" });
     });
   } catch (error) {
@@ -80,6 +107,28 @@ exports.edit = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const id = req.body.id;
+
+    Product.findOne({ _id: id }, function async(err, res) {
+      if (err) throw err;
+      process.chdir("uploads");
+      process.chdir("product");
+      const length = res.img.split("\\").length;
+      const item = res.img.split("\\")[length - 1];
+
+      fs.rmSync(
+        process.cwd() + "\\" + item,
+        { recursive: true, force: true },
+        (err) => {
+          if (err) {
+            return console.log("error occurred in deleting file", err);
+          }
+          console.log("File deleted successfully");
+          process.chdir("../");
+          process.chdir("../");
+        }
+      );
+      return true;
+    });
 
     Product.findByIdAndDelete(id, function (err) {
       if (err) {
