@@ -1,6 +1,4 @@
 const fs = require("fs");
-const path = require("path");
-const { dirname } = require("path");
 const process = require('process');
 const db = require("../models");
 const Media = db.media;

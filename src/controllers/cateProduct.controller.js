@@ -1,3 +1,4 @@
+const queryString = require("querystring");
 const db = require("../models");
 const CateProduct = db.cateProduct;
 const Product = db.product;
@@ -76,6 +77,38 @@ exports.getAllProductByCateId = async (req, res) => {
       },
     ]);
 
+    return res.json(result);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.getAllProductPaginationSortFilterByCateId = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const _result = queryString.parse('foo=1', {parseNumbers: true});
+    
+    console.log(req.params);
+
+    const result = await Product.aggregate([
+      {
+        $lookup: {
+          from: "cateproducts",
+          localField: "_id",
+          foreignField: "cateId",
+          as: "productList",
+        },
+      },
+      { $match: { cateId: id } },
+      {
+        $project: {
+          code: 1,
+          name: 1,
+          img: 1,
+        },
+      },
+    ]);
     return res.json(result);
   } catch (error) {
     console.log(error.message);
