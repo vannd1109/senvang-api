@@ -86,10 +86,7 @@ exports.getAllProductByCateId = async (req, res) => {
 exports.getAllProductPaginationSortFilterByCateId = async (req, res) => {
   try {
     const id = req.params.id;
-
-    const _result = queryString.parse('foo=1', {parseNumbers: true});
-    
-    console.log(req.params);
+    const page = req.params.page;
 
     const result = await Product.aggregate([
       {
@@ -108,6 +105,8 @@ exports.getAllProductPaginationSortFilterByCateId = async (req, res) => {
           img: 1,
         },
       },
+      {$limit: 5 * page},
+      {$skip: 5 * (page - 1)},
     ]);
     return res.json(result);
   } catch (error) {

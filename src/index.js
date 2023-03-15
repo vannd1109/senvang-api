@@ -74,6 +74,7 @@ require("./routes/page.routes")(app);
 require("./routes/cateNew.routes")(app);
 require("./routes/new.routes")(app);
 require("./routes/media.routes")(app);
+require("./routes/banner.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
