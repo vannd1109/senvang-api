@@ -7,9 +7,9 @@ function Convert(string){
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const name = req.body.name;
+    const code = req.body.code;
 
-    destDir = './uploads/banner/'+ Convert(name).replaceAll(' ','-').toLowerCase();
+    destDir = './uploads/banner/'+ Convert(code).replaceAll(' ','-').toLowerCase();
 
     fs.mkdirsSync(destDir);
     

@@ -1,6 +1,6 @@
 const fs = require("fs");
-const db = require("../models");
 const process = require("process");
+const db = require("../models");
 const Product = db.product;
 
 exports.getAllProduct = (req, res) => {

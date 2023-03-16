@@ -1,12 +1,26 @@
 const multer = require("multer");
+const fs = require('fs-extra');
+
+function Convert(string){
+  return string.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads/cate-new/");
+    let code = req.body.code;
+
+    let destDir = './uploads/cate-new/'+ Convert(code).toLowerCase().replaceAll(" ","-");
+
+    fs.mkdirsSync(destDir);
+    
+    cb(null, destDir);
   },
   filename: (req, file, cb) => {
-
-    cb(null, file.originalname);
+    const filename = Convert(file.originalname).replaceAll(' ','-').toLowerCase()
+    cb(
+      null,
+      filename
+    );
   },
 });
 
@@ -22,11 +36,6 @@ const filefilter = (req, file, cb) => {
   }
 };
 
-const upload = multer(
-  { 
-    storage: storage,
-    filefilter: filefilter,
-    limits: { fieldSize: 25 * 1024 * 1024 }
-  });
+const upload = multer({ storage: storage, filefilter: filefilter });
 
 module.exports = upload;

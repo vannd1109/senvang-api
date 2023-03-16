@@ -105,8 +105,8 @@ exports.getAllProductPaginationSortFilterByCateId = async (req, res) => {
           img: 1,
         },
       },
-      {$limit: 5 * page},
-      {$skip: 5 * (page - 1)},
+      {$limit: 10 * page},
+      {$skip: 10 * (page - 1)},
     ]);
     return res.json(result);
   } catch (error) {

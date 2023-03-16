@@ -15,6 +15,10 @@ const News = new mongoose.Schema(
       required: true,
       type: String,
     },
+    sort_desc: {
+      require: true,
+      type: String,
+    },
     cateId: {
       require: true,
       type: String,

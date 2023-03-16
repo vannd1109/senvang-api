@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     let code = req.body.code;
 
-    destDir = './uploads/media/'+ Convert(code).toLowerCase().replaceAll(" ","-");
+    let destDir = './uploads/media/'+ Convert(code).toLowerCase().replaceAll(" ","-");
 
     fs.mkdirsSync(destDir);
     
