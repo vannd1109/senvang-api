@@ -31,7 +31,6 @@ exports.add = (req, res) => {
     cateId: body.cateId,
     description: body.description,
     content: body.content,
-    content: body.content,
     sort_desc: body.sort_desc,
     img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
   });
@@ -72,7 +71,6 @@ exports.edit = async (req, res) => {
       news.name = body.name;
       news.description = body.description;
       news.content = body.content,
-      news.content = body.content;
       news.sort_desc = body.sort_desc;
       news.img = img;
       news.cateId = body.cateId;

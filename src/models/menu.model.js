@@ -1,24 +1,24 @@
 const mongoose = require("mongoose");
 
-const Page = new mongoose.Schema(
+const Menu = new mongoose.Schema(
   {
-    title: {
-      require: true,
-      type: String,
-    },
-    catePage: String,
-    description: String,
-    content: String,
-    img: {
+    code: {
       required: true,
       type: String,
     },
-    slug: String,
+    name: {
+      required: true,
+      type: String,
+    },
+    items: {
+      require: true,
+      type: Array,
+    },
   },
   { timestamps: true }
 );
 
-Page.set("toJSON", {
+Menu.set("toJSON", {
   transform: (document, returnedObj) => {
     returnedObj.id = returnedObj._id.toString();
     delete returnedObj._id;
@@ -26,4 +26,4 @@ Page.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Page", Page);
+module.exports = mongoose.model("Menu", Menu);
