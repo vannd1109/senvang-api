@@ -1,5 +1,6 @@
 const config = require("../config/auth.config");
 const db = require("../models");
+const nodemailer = require("nodemailer");
 
 const User = db.user;
 
@@ -39,6 +40,25 @@ exports.getUserById = (req, res) => {
       role: user.role,
     };
     return res.json(_result);
+  });
+};
+
+exports.findUserByEmail = (req, res) => {
+  const { email } = req.params;
+  User.find({ email: email }, function (err, result) {
+    if (err) throw err;
+
+    if (result.length === 0) {
+      res.send({ message: "Không có kết quả tìm kiếm" });
+    } else {
+      const user = result[0];
+      const _result = {
+        id: user.id,
+        fullname: user.fullname,
+        email: user.email,
+      };
+      return res.json(_result);
+    }
   });
 };
 
@@ -89,5 +109,39 @@ exports.delete = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
+  }
+};
+
+exports.sendEmail = async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    const adminEmail = "admin@gmail.com";
+    const adminPassword = "123456";
+
+    const mailHost = "smtp.gmail.com";
+    const mailPort = 587;
+      const transporter = nodemailer.createTransport({
+        host: mailHost,
+        port: mailPort,
+        secure: false,
+        auth: {
+          user: adminEmail,
+          pass: adminPassword,
+        },
+      });
+
+      const options = {
+        from: adminEmail, // địa chỉ admin email bạn dùng để gửi
+        to: email, // địa chỉ gửi đến
+        subject: "Tiêu đề email", // Tiêu đề của mail
+        html: "htmlContent" // Phần nội dung mail mình sẽ dùng html thay vì thuần văn bản thông thường.
+      }
+
+      await transporter.sendMail(options);
+
+      console.log("Successfully");
+  } catch (error) {
+    console.log(error, "email not sent");
   }
 };

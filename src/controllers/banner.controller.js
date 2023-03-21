@@ -1,5 +1,5 @@
 const fs = require("fs");
-const process = require('process');
+const process = require("process");
 const db = require("../models");
 const Banner = db.banner;
 
@@ -53,6 +53,7 @@ exports.edit = async (req, res) => {
   try {
     const body = req.body;
     const file = req.files[0];
+    const id = body.id;
 
     let img = "";
 
@@ -64,12 +65,10 @@ exports.edit = async (req, res) => {
         "://" +
         req.get("host") +
         "/uploads/banner/" +
-        Convert(body.name).replaceAll(" ", "-").toLowerCase() +
+        Convert(body.code).replaceAll(" ", "-").toLowerCase() +
         "/" +
         file.filename;
     }
-
-    const id = body.id;
 
     Banner.findById(id, (err, banner) => {
       if (err) {
@@ -78,7 +77,6 @@ exports.edit = async (req, res) => {
       banner.code = body.code;
       banner.img = img;
       banner.items = body.items;
-      banner.url = body.url;
 
       banner.save();
       res.send({ message: "Cập nhật thông tin thành công!" });
@@ -94,17 +92,21 @@ exports.delete = async (req, res) => {
 
     Banner.findOne({ _id: id }, function async(err, res) {
       if (err) throw err;
-        process.chdir("uploads");
-        process.chdir("banner");
+      process.chdir("uploads");
+      process.chdir("banner");
 
-        fs.rmdir(process.cwd() + "\\" + res.code.toLowerCase(), { recursive: true, force: true }, (err) => {
-        if (err) {
-          return console.log("error occurred in deleting directory", err);
+      fs.rmdir(
+        process.cwd() + "\\" + res.code.toLowerCase(),
+        { recursive: true, force: true },
+        (err) => {
+          if (err) {
+            return console.log("error occurred in deleting directory", err);
+          }
+          console.log("Directory deleted successfully");
+          process.chdir("../");
+          process.chdir("../");
         }
-        console.log("Directory deleted successfully");
-        process.chdir("../");
-        process.chdir("../");
-      });
+      );
       return true;
     });
 
@@ -118,5 +120,3 @@ exports.delete = async (req, res) => {
     console.log(error.message);
   }
 };
-
-
