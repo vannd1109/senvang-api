@@ -8,3 +8,14 @@ exports.getAllRoles = (req, res) => {
     return res.json(result);
   });
 };
+
+exports.singleRole = async (req, res) => {
+  try {
+    Role.findOne({ value: req.params.value }, function (err, result) {
+      if (err) throw err;
+      return res.json(result);
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};

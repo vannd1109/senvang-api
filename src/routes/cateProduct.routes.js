@@ -16,4 +16,5 @@ module.exports = function (app) {
   app.get("/api/cate-product/:id/pagination-sort-filter/:page", controller.getAllProductPaginationSortFilterByCateId);
   app.get("/api/cate-product/view/:id", controller.singleCateProduct);
   app.post("/api/cate-product/edit",upload.any("cate-product"), controller.edit);
+  app.post("/api/cate-product/delete", controller.delete);
 };

@@ -11,4 +11,5 @@ module.exports = function (app) {
   });
 
   app.get("/api/roles/all", controller.getAllRoles);
+  app.get("/api/roles/:value", controller.singleRole);
 };

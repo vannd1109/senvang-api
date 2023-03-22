@@ -29,18 +29,34 @@ exports.add = (req, res) => {
 
     const file = req.files[0];
 
-    const productGroup = new ProductGroup({
+    ProductGroup.findOne({
       code: body.code,
-      name: body.name,
-      items: body.items,
-      img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
-    });
-
-    productGroup.save((err, productGroup) => {
+    }).exec((err, u) => {
       if (err) {
         res.status(500).send({ message: err });
+        return;
+      }
+
+      if (u) {
+        res.status(400).send({
+          message: "Mã nhóm sản phẩm đã tồn tại! Vui lòng kiểm tra lại.",
+        });
+        return;
       } else {
-        res.send({ message: "Thêm thành công nhóm sản phẩm mới!" });
+        const productGroup = new ProductGroup({
+          code: body.code,
+          name: body.name,
+          items: body.items,
+          img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
+        });
+
+        productGroup.save((err, productGroup) => {
+          if (err) {
+            res.status(500).send({ message: err });
+          } else {
+            res.send({ message: "Thêm thành công nhóm sản phẩm mới!" });
+          }
+        });
       }
     });
   } catch (error) {
@@ -100,5 +116,3 @@ exports.delete = async (req, res) => {
     console.log(error.message);
   }
 };
-
-

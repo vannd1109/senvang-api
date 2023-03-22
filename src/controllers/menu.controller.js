@@ -1,5 +1,3 @@
-const fs = require("fs");
-const process = require("process");
 const db = require("../models");
 const Menu = db.menu;
 
@@ -24,17 +22,33 @@ exports.singleMenu = async (req, res) => {
 exports.add = (req, res) => {
   const body = req.body;
 
-  const menu = new Menu({
+  Menu.findOne({
     code: body.code,
-    name: body.name,
-    items: body.items,
-  });
-
-  menu.save((err, product) => {
+  }).exec((err, u) => {
     if (err) {
       res.status(500).send({ message: err });
+      return;
+    }
+
+    if (u) {
+      res.status(400).send({
+        message: "Mã menu đã tồn tại! Vui lòng kiểm tra lại.",
+      });
+      return;
     } else {
-      res.send({ message: "Thêm thành công menu mới!" });
+      const menu = new Menu({
+        code: body.code,
+        name: body.name,
+        items: body.items,
+      });
+
+      menu.save((err, product) => {
+        if (err) {
+          res.status(500).send({ message: err });
+        } else {
+          res.send({ message: "Thêm thành công menu mới!" });
+        }
+      });
     }
   });
 };

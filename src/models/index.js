@@ -19,6 +19,7 @@ db.media = require("./media.model");
 db.service = require("./services.model");
 db.banner = require("./banner.model");
 db.menu = require("./menu.model");
+db.feedback = require("./feedback.model");
 
 db.ROLES = ["admin", "user", "guest"];
 

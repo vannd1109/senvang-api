@@ -1,5 +1,5 @@
 const fs = require("fs");
-const process = require('process');
+const process = require("process");
 const db = require("../models");
 const Media = db.media;
 
@@ -33,8 +33,6 @@ exports.add = (req, res) => {
     const file = req.files[0];
     const _album = [...files];
 
-    
-
     let img = "";
 
     for (let i = 0; i < files.length; i++) {
@@ -54,18 +52,34 @@ exports.add = (req, res) => {
 
     _album.shift();
 
-    const media = new Media({
+    Media.findOne({
       code: body.code,
-      title: body.title,
-      img: img,
-      album: _album,
-    });
-
-    media.save((err, media) => {
+    }).exec((err, u) => {
       if (err) {
         res.status(500).send({ message: err });
+        return;
+      }
+
+      if (u) {
+        res.status(400).send({
+          message: "Mã bộ sưu tập đã tồn tại! Vui lòng kiểm tra lại.",
+        });
+        return;
       } else {
-        res.send({ message: "Thêm thành công bộ sưu tập mới!" });
+        const media = new Media({
+          code: body.code,
+          title: body.title,
+          img: img,
+          album: _album,
+        });
+
+        media.save((err, media) => {
+          if (err) {
+            res.status(500).send({ message: err });
+          } else {
+            res.send({ message: "Thêm thành công bộ sưu tập mới!" });
+          }
+        });
       }
     });
   } catch (error) {
@@ -135,17 +149,21 @@ exports.delete = async (req, res) => {
 
     Media.findOne({ _id: id }, function async(err, res) {
       if (err) throw err;
-        process.chdir("uploads");
-        process.chdir("media");
+      process.chdir("uploads");
+      process.chdir("media");
 
-        fs.rmdir(process.cwd() + "\\" + res.code.toLowerCase(), { recursive: true, force: true }, (err) => {
-        if (err) {
-          return console.log("error occurred in deleting directory", err);
+      fs.rmdir(
+        process.cwd() + "\\" + res.code.toLowerCase(),
+        { recursive: true, force: true },
+        (err) => {
+          if (err) {
+            return console.log("error occurred in deleting directory", err);
+          }
+          console.log("Directory deleted successfully");
+          process.chdir("../");
+          process.chdir("../");
         }
-        console.log("Directory deleted successfully");
-        process.chdir("../");
-        process.chdir("../");
-      });
+      );
       return true;
     });
 
@@ -153,7 +171,7 @@ exports.delete = async (req, res) => {
       if (err) {
         res.status(500).send({ message: err });
       }
-      
+
       res.send({ message: "Xóa thành công!" });
     });
   } catch (error) {

@@ -31,17 +31,31 @@ exports.add = (req, res) => {
 
     const file = req.files[0];
 
-    const banner = new Banner({
+    Banner.findOne({
       code: body.code,
-      items: body.items,
-      img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
-    });
-
-    banner.save((err, banner) => {
+    }).exec((err, u) => {
       if (err) {
         res.status(500).send({ message: err });
+        return;
+      }
+  
+      if (u) {
+        res.status(400).send({ message: "Mã banner đã tồn tại! Vui lòng kiểm tra lại." });
+        return;
       } else {
-        res.send({ message: "Thêm thành công banner mới!" });
+        const banner = new Banner({
+          code: body.code,
+          items: body.items,
+          img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
+        });
+  
+        banner.save((err, banner) => {
+          if (err) {
+            res.status(500).send({ message: err });
+          } else {
+            res.send({ message: "Thêm thành công banner mới!" });
+          }
+        });
       }
     });
   } catch (error) {

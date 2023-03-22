@@ -1,4 +1,3 @@
-const { log } = require("console");
 const fs = require("fs");
 const process = require("process");
 const db = require("../models");
@@ -55,25 +54,37 @@ exports.add = async (req, res) => {
 
     if (file) {
       img = req.protocol + "://" + req.get("host") + "\\" + file["path"];
-    } else {
-      img =
-        req.protocol +
-        "://" +
-        req.get("host") +
-        "/uploads/cate-new/default.jpg";
     }
 
-    const cateNew = new CateNew({
+    CateNew.findOne({
       code: body.code,
-      name: body.name,
-      img: img,
-    });
-
-    cateNew.save((err, cateNew) => {
+    }).exec((err, u) => {
       if (err) {
         res.status(500).send({ message: err });
+        return;
+      }
+
+      if (u) {
+        res
+          .status(400)
+          .send({
+            message: "Mã danh mục tin tức đã tồn tại! Vui lòng kiểm tra lại.",
+          });
+        return;
       } else {
-        res.send({ message: "Thêm thành công danh mục tin tức mới!" });
+        const cateNew = new CateNew({
+          code: body.code,
+          name: body.name,
+          img: img,
+        });
+
+        cateNew.save((err, cateNew) => {
+          if (err) {
+            res.status(500).send({ message: err });
+          } else {
+            res.send({ message: "Thêm thành công danh mục tin tức mới!" });
+          }
+        });
       }
     });
   } catch (error) {
@@ -96,7 +107,7 @@ exports.edit = async (req, res) => {
         "://" +
         req.get("host") +
         "/uploads/cate-new/" +
-        Convert(body.code) +
+        Convert(body.code).toLowerCase().replaceAll(" ", "-") +
         "/" +
         file.filename;
     }

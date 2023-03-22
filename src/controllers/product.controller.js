@@ -25,19 +25,33 @@ exports.add = (req, res) => {
   const body = req.body;
   const file = req.files[0];
 
-  const product = new Product({
+  Product.findOne({
     code: body.code,
-    name: body.name,
-    cateId: body.cateId,
-    description: body.description,
-    img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
-  });
-
-  product.save((err, product) => {
+  }).exec((err, u) => {
     if (err) {
       res.status(500).send({ message: err });
+      return;
+    }
+
+    if (u) {
+      res.status(400).send({ message: "Mã sản phẩm đã tồn tại! Vui lòng kiểm tra lại." });
+      return;
     } else {
-      res.send({ message: "Thêm thành công sản phẩm mới!" });
+      const product = new Product({
+        code: body.code,
+        name: body.name,
+        cateId: body.cateId,
+        description: body.description,
+        img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
+      });
+
+      product.save((err, product) => {
+        if (err) {
+          res.status(500).send({ message: err });
+        } else {
+          res.send({ message: "Thêm thành công sản phẩm mới!" });
+        }
+      });
     }
   });
 };

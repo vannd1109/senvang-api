@@ -25,21 +25,37 @@ exports.add = (req, res) => {
   const body = req.body;
   const file = req.files[0];
 
-  const pageItem = new Page({
+  Page.findOne({
     title: body.title,
-    catePage: body.catePage,
-    description: body.description,
-    content: body.content,
-    slug: body.slug,
-    childrenPage: body.childrenPage,
-    img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
-  });
-
-  pageItem.save((err, pageItem) => {
+  }).exec((err, u) => {
     if (err) {
       res.status(500).send({ message: err });
+      return;
+    }
+
+    if (u) {
+      res.status(400).send({
+        message: "Trang đã tồn tại! Vui lòng kiểm tra lại.",
+      });
+      return;
     } else {
-      res.send({ message: "Thêm thành công trang mới!" });
+      const pageItem = new Page({
+        title: body.title,
+        catePage: body.catePage,
+        description: body.description,
+        content: body.content,
+        slug: body.slug,
+        childrenPage: body.childrenPage,
+        img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
+      });
+
+      pageItem.save((err, pageItem) => {
+        if (err) {
+          res.status(500).send({ message: err });
+        } else {
+          res.send({ message: "Thêm thành công trang mới!" });
+        }
+      });
     }
   });
 };
@@ -81,8 +97,8 @@ exports.edit = async (req, res) => {
   }
 };
 
-function Convert(string){
-  return string.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+function Convert(string) {
+  return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 exports.delete = async (req, res) => {
@@ -94,7 +110,7 @@ exports.delete = async (req, res) => {
       process.chdir("uploads");
       process.chdir("page");
 
-      const title = Convert(res.title).toLowerCase().replaceAll(" ","-");
+      const title = Convert(res.title).toLowerCase().replaceAll(" ", "-");
 
       fs.rmdir(
         process.cwd() + "\\" + title,
