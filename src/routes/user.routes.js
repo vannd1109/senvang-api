@@ -32,8 +32,10 @@ module.exports = function (app) {
   );
   app.get("/api/users/all", controller.getAllUser);
   app.get("/api/users/view/:id", controller.getUserById);
-  app.post("/api/users/edit",upload.single("photo"), controller.edit);
+  app.post("/api/users/edit", upload.single("photo"), controller.edit);
   app.post("/api/users/delete", controller.delete);
   app.get("/api/users/find/:email", controller.findUserByEmail);
-  app.get("/api/users/send-email/:email", controller.sendEmail);
+  app.post("/api/users/change-password", controller.changePassword);
+  app.post("/api/users/:id", controller.singleUser);
+  app.post("/api/sendemail/", controller.sendEmail);
 };

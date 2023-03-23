@@ -3,8 +3,8 @@ const db = require("../models");
 const User = db.user;
 const Role = db.role;
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 exports.signup = async (req, res) => {
   try {
@@ -20,7 +20,8 @@ exports.signup = async (req, res) => {
         "/uploads/account/" +
         req.file.filename;
     } else {
-      img = req.protocol + "://" + req.get("host") + "/uploads/account/default.png";
+      img =
+        req.protocol + "://" + req.get("host") + "/uploads/account/default.png";
     }
 
     User.findOne({
@@ -58,11 +59,11 @@ exports.signup = async (req, res) => {
             photo: img,
           });
 
-          user.save( (err, user) => {
+          user.save((err, user) => {
             if (err) {
-               res.status(500).send({ message: err });
+              res.status(500).send({ message: err });
             } else {
-               res.send({ message: "Tạo thành công tài khoản mới!" });
+              res.send({ message: "Tạo thành công tài khoản mới!" });
             }
           });
         }
@@ -79,7 +80,6 @@ exports.signin = (req, res) => {
   })
     .populate("role")
     .exec((err, user) => {
-
       if (err) {
         res.status(500).send({ message: err });
         return;
@@ -95,29 +95,26 @@ exports.signin = (req, res) => {
       );
 
       if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: "Mật khẩu không đúng!",
+        return res
+          .status(400)
+          .send({ accessToken: null, message: "Mật khẩu không đúng!" });
+      } else {
+        const token = jwt.sign({ id: user.id }, config.secret, {
+          expiresIn: 86400, // 24 hours
+        });
+
+        const _role = "ROLE_" + user.role.toUpperCase();
+
+        res.status(200).send({
+          id: user._id,
+          fullname: user.fullname,
+          username: user.username,
+          email: user.email,
+          role: _role,
+          photo: user.photo,
+          accessToken: token,
         });
       }
-
-      const token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400, // 24 hours
-      });
-
-      const _role = "ROLE_" + user.role.toUpperCase();
-
-      console.log(_role);
-
-      res.status(200).send({
-        id: user._id,
-        fullname: user.fullname,
-        username: user.username,
-        email: user.email,
-        role: _role,
-        photo: user.photo,
-        accessToken: token,
-      });
     });
 };
 

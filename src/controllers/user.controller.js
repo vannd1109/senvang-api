@@ -1,6 +1,9 @@
 const config = require("../config/auth.config");
 const db = require("../models");
 const nodemailer = require("nodemailer");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const sendEmail = require("../utils/sendEmail");
 
 const User = db.user;
 
@@ -89,8 +92,21 @@ exports.edit = async (req, res) => {
       user.role = body.role;
       user.photo = img;
 
+      const token = jwt.sign({ id: user.id }, config.secret, {
+        expiresIn: 86400, // 24 hours
+      });
       user.save();
-      res.send({ message: "Cập nhật thông tin thành công!" });
+
+      res.status(200).send({
+        message: "Cập nhật thông tin thành công!",
+        id: id,
+        fullname: body.fullname,
+        username: body.username,
+        email: body.email,
+        role: body.role,
+        photo: img,
+        accessToken: token,
+      });
     });
   } catch (error) {
     console.log(error.message);
@@ -112,36 +128,52 @@ exports.delete = async (req, res) => {
   }
 };
 
+exports.changePassword = async (req, res) => {
+  try {
+    const body = req.body;
+    const id = body.id;
+
+    User.findById(id, (err, user) => {
+      if (err) {
+        res.status(500).send({ message: err });
+      }
+      (user.password = bcrypt.hashSync(body.password, 8)), user.save();
+      res.send({ message: "Cập nhật mật khẩu thành công!" });
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.singleUser = (req, res) => {
+  try {
+    User.findOne({ _id: req.params.id }, function (err, result) {
+      if (err) throw err;
+      return res.json(result);
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 exports.sendEmail = async (req, res) => {
-  const { email } = req.params;
+  const { email } = req.body;
 
   try {
-    const adminEmail = "admin@gmail.com";
-    const adminPassword = "123456";
+    const send_to = email;
+    const sent_from = "duynguyen1109gl@gmail.com";
+    const reply_to = email;
+    const subject = "Thank YOU Message";
+    const message = `
+      <h3>Hello Duy Van</h3>
+      <p>Thank for your Sen Vang</p>
+      <p>Regards...</p>
+    `;
 
-    const mailHost = "smtp.gmail.com";
-    const mailPort = 587;
-      const transporter = nodemailer.createTransport({
-        host: mailHost,
-        port: mailPort,
-        secure: false,
-        auth: {
-          user: adminEmail,
-          pass: adminPassword,
-        },
-      });
+    await sendEmail(subject, message, send_to, sent_from, reply_to);
 
-      const options = {
-        from: adminEmail, // địa chỉ admin email bạn dùng để gửi
-        to: email, // địa chỉ gửi đến
-        subject: "Tiêu đề email", // Tiêu đề của mail
-        html: "htmlContent" // Phần nội dung mail mình sẽ dùng html thay vì thuần văn bản thông thường.
-      }
-
-      await transporter.sendMail(options);
-
-      console.log("Successfully");
+    res.status(200).json({ success: true, message: "Email Sent" });
   } catch (error) {
-    console.log(error, "email not sent");
+    res.status(500).json(error.message);
   }
 };
