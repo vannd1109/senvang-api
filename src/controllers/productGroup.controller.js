@@ -95,7 +95,7 @@ exports.edit = async (req, res) => {
       productGroup.items = body.items;
 
       productGroup.save();
-      res.send({ message: "Cập nhật thông tin thành công!" });
+      res.send({ message: "Cập nhật dữ liệu thành công!" });
     });
   } catch (error) {
     console.log(error.message);

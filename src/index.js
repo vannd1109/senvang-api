@@ -77,6 +77,8 @@ require("./routes/media.routes")(app);
 require("./routes/banner.routes")(app);
 require("./routes/menu.routes")(app);
 require("./routes/feedback.routes")(app);
+require("./routes/partner.routes")(app);
+require("./routes/infoCompany.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

@@ -20,6 +20,8 @@ db.service = require("./services.model");
 db.banner = require("./banner.model");
 db.menu = require("./menu.model");
 db.feedback = require("./feedback.model");
+db.partner = require("./partner.model");
+db.infoCompany = require("./infoCompany.model");
 
 db.ROLES = ["admin", "user", "guest"];
 

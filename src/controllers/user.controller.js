@@ -98,7 +98,7 @@ exports.edit = async (req, res) => {
       user.save();
 
       res.status(200).send({
-        message: "Cập nhật thông tin thành công!",
+        message: "Cập nhật dữ liệu thành công!",
         id: id,
         fullname: body.fullname,
         username: body.username,
@@ -157,22 +157,45 @@ exports.singleUser = (req, res) => {
 };
 
 exports.sendEmail = async (req, res) => {
-  const { email } = req.body;
+  const { email } = req.params;
 
   try {
-    const send_to = email;
-    const sent_from = "duynguyen1109gl@gmail.com";
-    const reply_to = email;
-    const subject = "Thank YOU Message";
-    const message = `
-      <h3>Hello Duy Van</h3>
-      <p>Thank for your Sen Vang</p>
-      <p>Regards...</p>
-    `;
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'vannd.dev1109@gmail.com',
+        pass: 'Vannd.dev30042019@@@'
+      }
+    });
 
-    await sendEmail(subject, message, send_to, sent_from, reply_to);
+    const mailOptions = {
+      from: 'vannd.dev1109@gmail.com',
+      to: 'duynguyen1109gl@gmail.com',
+      subject: 'Sending Email using Node.js',
+      text: 'That was easy!'
+    };
 
-    res.status(200).json({ success: true, message: "Email Sent" });
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+
+    // const send_to = email;
+    // const sent_from = "duynguyen1109gl@gmail.com";
+    // const reply_to = email;
+    // const subject = "Thank YOU Message";
+    // const message = `
+    //   <h3>Hello Duy Van</h3>
+    //   <p>Thank for your Sen Vang</p>
+    //   <p>Regards...</p>
+    // `;
+
+    // await sendEmail(subject, message, send_to, sent_from, reply_to);
+
+    // res.status(200).json({ success: true, message: "Email Sent" });
   } catch (error) {
     res.status(500).json(error.message);
   }

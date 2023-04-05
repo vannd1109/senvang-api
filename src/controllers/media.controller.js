@@ -136,7 +136,7 @@ exports.edit = async (req, res) => {
       media.album = album;
 
       media.save();
-      res.send({ message: "Cập nhật thông tin thành công!" });
+      res.send({ message: "Cập nhật dữ liệu thành công!" });
     });
   } catch (error) {
     console.log(error.message);

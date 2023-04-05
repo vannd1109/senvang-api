@@ -1,18 +1,22 @@
 const fs = require("fs");
 const process = require("process");
 const db = require("../models");
-const Page = db.page;
+const Partner = db.partner;
 
-exports.getAllPage = (req, res) => {
-  Page.find({}, function (err, result) {
+function Convert(string) {
+  return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+exports.getAllPartner = (req, res) => {
+  Partner.find({}, function (err, result) {
     if (err) throw err;
     return res.json(result);
   });
 };
 
-exports.singlePage = (req, res) => {
+exports.singlePartner = (req, res) => {
   try {
-    Page.findOne({ _id: req.params.id }, function (err, result) {
+    Partner.findOne({ _id: req.params.id }, function (err, result) {
       if (err) throw err;
       return res.json(result);
     });
@@ -25,8 +29,8 @@ exports.add = (req, res) => {
   const body = req.body;
   const file = req.files[0];
 
-  Page.findOne({
-    title: body.title,
+  Partner.findOne({
+    code: body.code,
   }).exec((err, u) => {
     if (err) {
       res.status(500).send({ message: err });
@@ -35,25 +39,25 @@ exports.add = (req, res) => {
 
     if (u) {
       res.status(400).send({
-        message: "Trang đã tồn tại! Vui lòng kiểm tra lại.",
+        message: "Mã đối tác đã tồn tại! Vui lòng kiểm tra lại.",
       });
       return;
     } else {
-      const pageItem = new Page({
-        title: body.title,
-        catePage: body.catePage,
+      const partnerItem = new Partner({
+        code: body.code,
+        company: body.company,
+        email: body.email,
+        phone: body.phone,
         description: body.description,
         content: body.content,
-        slug: body.slug,
-        childrenPage: body.childrenPage,
         img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
       });
 
-      pageItem.save((err, pageItem) => {
+      partnerItem.save((err, partnerItem) => {
         if (err) {
           res.status(500).send({ message: err });
         } else {
-          res.send({ message: "Thêm thành công trang mới!" });
+          res.send({ message: "Thêm thành công đối tác mới!" });
         }
       });
     }
@@ -74,22 +78,24 @@ exports.edit = async (req, res) => {
         req.protocol +
         "://" +
         req.get("host") +
-        "/uploads/page/" +
+        "/uploads/partner/" + Convert(body.code).toLowerCase().replaceAll(" ","-") + "/" +
         file.filename;
     }
     const id = body.id;
 
-    Page.findById(id, (err, page) => {
+    Partner.findById(id, (err, partner) => {
       if (err) {
         res.status(500).send({ message: err });
       }
-      page.title = body.title;
-      page.description = body.description;
-      (page.content = body.content), (page.img = img);
-      page.parentPage = body.parentPage;
-      page.slug = body.slug;
+      partner.code = body.code;
+      partner.company = body.company;
+      partner.email = body.email;
+      partner.phone = body.phone;
+      partner.description = body.description;
+      (partner.content = body.content), (partner.sort_desc = body.sort_desc);
+      partner.img = img;
 
-      page.save();
+      partner.save();
       res.send({ message: "Cập nhật dữ liệu thành công!" });
     });
   } catch (error) {
@@ -97,29 +103,27 @@ exports.edit = async (req, res) => {
   }
 };
 
-function Convert(string) {
-  return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
 exports.delete = async (req, res) => {
   try {
     const id = req.body.id;
 
-    Page.findOne({ _id: id }, function async(err, res) {
+    Partner.findOne({ _id: id }, function async(err, res) {
       if (err) throw err;
       process.chdir("uploads");
-      process.chdir("page");
+      process.chdir("partner");
+      const length = res.img.split("\\").length;
+      const item = res.img.split("\\")[length - 1];
 
-      const title = Convert(res.title).toLowerCase().replaceAll(" ", "-");
+      console.log(id);
 
-      fs.rmdir(
-        process.cwd() + "\\" + title,
+      fs.rmSync(
+        process.cwd() + "\\" + item,
         { recursive: true, force: true },
         (err) => {
           if (err) {
-            return console.log("error occurred in deleting directory", err);
+            return console.log("error occurred in deleting file", err);
           }
-          console.log("Directory deleted successfully");
+          console.log("File deleted successfully");
           process.chdir("../");
           process.chdir("../");
         }
@@ -127,7 +131,7 @@ exports.delete = async (req, res) => {
       return true;
     });
 
-    Page.findByIdAndDelete(id, function (err) {
+    Partner.findByIdAndDelete(id, function (err) {
       if (err) {
         res.status(500).send({ message: err });
       }

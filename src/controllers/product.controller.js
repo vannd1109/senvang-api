@@ -111,7 +111,7 @@ exports.edit = async (req, res) => {
       product.save();
       // process.chdir("../");
       // process.chdir("../");
-      res.send({ message: "Cập nhật thông tin thành công!" });
+      res.send({ message: "Cập nhật dữ liệu thành công!" });
     });
   } catch (error) {
     console.log(error.message);

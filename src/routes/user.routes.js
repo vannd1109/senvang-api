@@ -37,5 +37,5 @@ module.exports = function (app) {
   app.get("/api/users/find/:email", controller.findUserByEmail);
   app.post("/api/users/change-password", controller.changePassword);
   app.post("/api/users/:id", controller.singleUser);
-  app.post("/api/sendemail/", controller.sendEmail);
+  app.post("/api/users/send-email/:email", controller.sendEmail);
 };

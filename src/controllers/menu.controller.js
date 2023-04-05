@@ -65,7 +65,7 @@ exports.edit = async (req, res) => {
       menu.name = body.name;
       menu.items = body.items;
       menu.save();
-      res.send({ message: "Cập nhật thông tin thành công!" });
+      res.send({ message: "Cập nhật dữ liệu thành công!" });
     });
   } catch (error) {
     console.log(error.message);
