@@ -1,0 +1,41 @@
+const mongoose = require("mongoose");
+
+const Employee = new mongoose.Schema(
+  {
+    fullname: {
+      required: true,
+      type: String,
+    },
+    gender: {
+      require: true,
+      type: String,
+    },
+    department: {
+      require: true,
+      type: String,
+    },
+    emplID: {
+      require: true,
+      type: Number,
+    },
+    username: {
+      require: true,
+      type: String,
+    },
+    password: {
+      require: true,
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
+
+Employee.set("toJSON", {
+  transform: (document, returnedObj) => {
+    returnedObj.id = returnedObj._id.toString();
+    delete returnedObj._id;
+    delete returnedObj.__v;
+  },
+});
+
+module.exports = mongoose.model("Employee", Employee);

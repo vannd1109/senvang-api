@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 const dbConfig = require("./config/db.config");
 const cookieSession = require("cookie-session");
 const path = require("path");
+const bcrypt = require("bcryptjs");
+const { DBConnectionProduction } = require("../src/connection/conn");
 
 const db = require("./models");
 
@@ -39,6 +41,7 @@ app.use(
 );
 
 const Role = db.role;
+const Employee = db.employee;
 
 db.mongoose.set("strictQuery", false);
 
@@ -47,9 +50,40 @@ db.mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
+  .then( async () => {
     console.log("Successfully connect to MongoDB.");
     initial();
+
+    // Connecting Production Database
+    // Creating Data
+    // Employee Table
+    // const connProduction = await new DBConnectionProduction().getConnection();
+    // const resProduction = await connProduction
+    //   .request()
+    //   .query(`SELECT * from Employee`);
+    // const employeeList = resProduction.recordsets[0];
+    // const pass_word = bcrypt.hashSync("123456", 8);
+    // for (let i = 0; i < employeeList.length - 1; i++) {
+    //   const employeeItem = employeeList[i];
+    //   const _username = employeeItem.EmplID;
+
+    //   await Employee.findOne({ username: _username }).then(async (result) => {
+    //     if (!result) {
+    //       const employee = new Employee({
+    //         fullname: employeeItem.Name,
+    //         gender: employeeItem.Gender,
+    //         department: employeeItem.Department,
+    //         emplID: employeeItem.EmplID,
+    //         username: employeeItem.EmplID,
+    //         password: pass_word,
+    //       });
+    //       await employee.save().then(function (emp) {});
+    //     }
+    //   });
+    // }
+    // connProduction.close();
+  })
+  .then(() => {
   })
   .catch((err) => {
     console.error("Connection error", err);
@@ -79,6 +113,9 @@ require("./routes/menu.routes")(app);
 require("./routes/feedback.routes")(app);
 require("./routes/partner.routes")(app);
 require("./routes/infoCompany.routes")(app);
+require("./routes/infoCompany.routes")(app);
+require("./routes/bookRice.routes")(app);
+require("./routes/employee.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
