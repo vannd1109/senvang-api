@@ -4,23 +4,33 @@ const BookRice = db.bookRice;
 exports.add = (req, res) => {
   try {
     const body = req.body;
-    console.log(req.body);
-    console.log(req.files[0]);
-    // const file = req.files[0]; 
 
-    // const slider = new Slider({
-    //   title: body.title,
-    //   url: body.url,
-    //   img: req.protocol + "://" + req.get("host") + "\\" + file["path"],
-    // });
+    const bookRice = new BookRice({
+      startDate: body.startDateSelect,
+      endDate: body.endDateSelect,
+      closeDate: body.closeDateSelect,
+      menu: body.arrBookRice,
+      status: body.statusBookrice,
+    });
 
-    // slider.save((err, slider) => {
-    //   if (err) {
-    //     res.status(500).send({ message: err });
-    //   } else {
-    //     res.send({ message: "Thêm thành công slider mới!" });
-    //   }
-    // });
+    if (body.statusBookrice) {
+      BookRice.find({}, function (err, bookriceList) {
+        if (err) throw err;
+        for (let i = 0; i < bookriceList.length; i++) {
+          const menuItem = bookriceList[i];
+          menuItem.status = false;
+          bookriceList[i].save();
+        }
+      });
+    }
+
+    bookRice.save((err, bookRice) => {
+      if (err) {
+        res.status(500).send({ message: err });
+      } else {
+        res.send({ message: "Thêm thành công thực đơn mới!" });
+      }
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -47,31 +57,30 @@ exports.singleBookRice = (req, res) => {
 exports.edit = async (req, res) => {
   try {
     const body = req.body;
-    const file = req.files[0];
-
-    let img = "";
-
-    if (body.img) {
-      img = body.img;
-    } else {
-      img =
-        req.protocol +
-        "://" +
-        req.get("host") +
-        "/uploads/slider/" +
-        file.filename;
-    }
     const id = body.id;
+    BookRice.find({}, function (err, bookriceList) {
+      if (err) throw err;
+      if (bookriceList.some((item) => item.status === true)) {
+        for (let i = 0; i < bookriceList.length; i++) {
+          if(bookriceList[i].id === id) continue;
+          const menuItem = bookriceList[i];
+          menuItem.status = false;
+          bookriceList[i].save();
+        }
+      }
+    });
 
-    Slider.findById(id, (err, slider) => {
+    BookRice.findById(id, (err, bookrice) => {
       if (err) {
         res.status(500).send({ message: err });
       }
-      slider.title = body.title;
-      slider.img = img;
-      slider.url = body.url;
+      bookrice.startDate = body.startDateSelect;
+      bookrice.endDate = body.endDateSelect;
+      bookrice.closeDate = body.closeDateSelect;
+      bookrice.menu = body.arrBookRice;
+      bookrice.status = body.statusBookrice;
 
-      slider.save();
+      bookrice.save();
       res.send({ message: "Cập nhật dữ liệu thành công!" });
     });
   } catch (error) {
@@ -83,7 +92,7 @@ exports.delete = async (req, res) => {
   try {
     const id = req.body.id;
 
-    Slider.findByIdAndDelete(id, function (err) {
+    BookRice.findByIdAndDelete(id, function (err) {
       if (err) {
         res.status(500).send({ message: err });
       }

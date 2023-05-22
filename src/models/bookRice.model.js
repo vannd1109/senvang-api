@@ -18,6 +18,7 @@ const BookRice = new mongoose.Schema(
       required: true,
       type: Array,
     },
+    status: Boolean,
   },
   { timestamps: true }
 );

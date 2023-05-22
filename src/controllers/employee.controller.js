@@ -4,7 +4,7 @@ const Employee = db.employee;
 const { DBConnectionWiseEyeOn } = require("../connection/conn");
 const { DBConnectionEpad180 } = require("../connection/conn");
 const moment = require("moment");
-moment.locale('vi')
+moment.locale("vi");
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -59,6 +59,14 @@ exports.logout = async (req, res) => {
 exports.getCheckInOut = async (req, res) => {
   const { UserEnrollNumber, TimeDate } = req.params;
 
+  const connWiseEyeOn = await new DBConnectionWiseEyeOn().getConnection();
+  const resultWiseEyeOn = await connWiseEyeOn
+    .request()
+    .query(
+      `SELECT * FROM CheckInOut WHERE UserEnrollNumber = ${UserEnrollNumber} AND TimeDate = '${TimeDate}'`
+    );
+  connWiseEyeOn.close();
+
   const connEpad180 = await new DBConnectionEpad180().getConnection();
   const resultEpad180 = await connEpad180
     .request()
@@ -67,44 +75,40 @@ exports.getCheckInOut = async (req, res) => {
     );
   connEpad180.close();
 
-  const connWiseEyeOn = await new DBConnectionWiseEyeOn().getConnection();
-  const resultWiseEyeOn = await connWiseEyeOn
-    .request()
-    .query(
-      `SELECT * FROM CheckInOut WHERE UserEnrollNumber = ${UserEnrollNumber} AND TimeDate = '${TimeDate}'`
-    );
-  connWiseEyeOn.close();
   const checkInOutWise = [];
   const checkInOutEpad = [];
-  resultWiseEyeOn.recordset.map(item => {
-    const wiseEyeOnItem = {
-      UserEnrollNumber: '0' + item.UserEnrollNumber,
-      TimeDate : item.TimeStr
-    }
+  resultWiseEyeOn.recordset.map((item) => {
     checkInOutWise.push(item.TimeStr);
   });
-  resultEpad180.recordset.map(item => {
-    const epad180Item = {
-      UserEnrollNumber: item.EmployeeATID,
-      TimeDate : item.CheckTime
-    }
+  resultEpad180.recordset.map((item) => {
     checkInOutEpad.push(item.CheckTime);
   });
-  
 
   let result = checkInOutWise.concat(checkInOutEpad);
-  result = result.sort(function(a,b){
+  result = result.sort(function (a, b) {
     return new Date(a) - new Date(b);
   });
 
   const timeCheckInOut = {};
 
-  if(result.length > 1) {
-    timeCheckInOut['checkIn'] = moment(result[0]).utc().format('HH:mm');
-    timeCheckInOut['checkOut'] = moment(result[result.length - 1]).utc().format('HH:mm');
+  if (result.length > 1) {
+    timeCheckInOut["checkIn"] = moment(result[0]).utc().format("HH:mm");
+    timeCheckInOut["checkOut"] = moment(result[result.length - 1])
+      .utc()
+      .format("HH:mm");
   } else {
-    timeCheckInOut['checkIn'] = moment(result[0]).utc().format('HH:mm');
-    timeCheckInOut['checkIn'] = '';
+    timeCheckInOut["checkIn"] = moment(result[0]).utc().format("HH:mm");
+    timeCheckInOut["checkIn"] = "";
   }
+
+  console.log(timeCheckInOut);
+
   return res.json(timeCheckInOut);
+};
+
+exports.getAllEmployee = (req, res) => {
+  Employee.find({}, function (err, result) {
+    if (err) throw err;
+    return res.json(result);
+  });
 };

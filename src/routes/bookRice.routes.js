@@ -9,7 +9,7 @@ module.exports = function (app) {
   //   );
   //   next();
   // });
-  app.post("/api/book-rice/add",upload.any("book-rice"), controller.add);
+  app.post("/api/book-rice/add", controller.add);
   app.get("/api/book-rice", controller.getAllBookRice);
   app.get("/api/book-rice/view/:id", controller.singleBookRice);
   app.post("/api/book-rice/edit", controller.edit);
