@@ -45,24 +45,7 @@ const Employee = new mongoose.Schema(
     slippageSupport: {
       require: true,
       type: String,
-    },
-    numberDaysLeave: {
-      require: true,
-      type: Number,
-    },
-    menuBookRice: {
-      require: true,
-      type: Array,
-    },
-    manageID: {
-      require: true,
-      type: String,
-    },
-    birthday: Date,
-    address: String,
-    email: String,
-    phone: String,
-    avatar: String,
+    },=
   },
   { timestamps: true }
 );

@@ -14,4 +14,6 @@ module.exports = function (app) {
   app.post("/api/logout", controller.logout);
 
   app.get('/api/check-in-out/:UserEnrollNumber/:TimeDate', controller.getCheckInOut);
+
+  app.get('/api/employees', controller.getAllEmployee);
 };
