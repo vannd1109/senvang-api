@@ -26,6 +26,43 @@ const Employee = new mongoose.Schema(
       require: true,
       type: String,
     },
+    baseSalary: {
+      require: true,
+      type: String,
+    },
+    commutingAssistance: {
+      require: true,
+      type: String,
+    },
+    housingAssistance: {
+      require: true,
+      type: String,
+    },
+    phoneFee: {
+      require: true,
+      type: String,
+    },
+    slippageSupport: {
+      require: true,
+      type: String,
+    },
+    numberDaysLeave: {
+      require: true,
+      type: Number,
+    },
+    menuBookRice: {
+      require: true,
+      type: Array,
+    },
+    manageID: {
+      require: true,
+      type: String,
+    },
+    birthday: Date,
+    address: String,
+    email: String,
+    phone: String,
+    avatar: String,
   },
   { timestamps: true }
 );
