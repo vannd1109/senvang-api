@@ -45,7 +45,7 @@ const Employee = new mongoose.Schema(
     slippageSupport: {
       require: true,
       type: String,
-    },=
+    },
   },
   { timestamps: true }
 );
