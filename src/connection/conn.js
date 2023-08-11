@@ -21,6 +21,27 @@ class DBConnectionProduction {
   }
 }
 
+class DBConnectionMFAssets {
+  async getConnection() {
+    try {
+      return await mssql.connect({
+        user: "sa",
+        password: "Binh@n1452",
+        server: "172.17.90.7",
+        database: "MFAssets",
+        port: 1433,
+        options: {
+          encrypt: false,
+          trustServerCertificate: true,
+          trustedConnection: true,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
 class DBConnectionWiseEyeOn {
   async getConnection() {
     try {
@@ -66,5 +87,6 @@ class DBConnectionEpad180 {
 module.exports = {
   DBConnectionProduction,
   DBConnectionWiseEyeOn,
-  DBConnectionEpad180
+  DBConnectionEpad180,
+  DBConnectionMFAssets
 }
