@@ -60,6 +60,10 @@ exports.add = (req, res) => {
   });
 };
 
+function Convert(string) {
+  return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 exports.edit = async (req, res) => {
   try {
     const body = req.body;
@@ -74,7 +78,7 @@ exports.edit = async (req, res) => {
         req.protocol +
         "://" +
         req.get("host") +
-        "/uploads/page/" +
+        "/uploads/page/" + Convert(body.title).toLowerCase().replaceAll(" ","-") + "/" +
         file.filename;
     }
     const id = body.id;

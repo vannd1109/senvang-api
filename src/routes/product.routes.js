@@ -10,7 +10,8 @@ module.exports = function (app) {
     next();
   });
 
-  app.get("/api/products", controller.getAllProduct);
+  app.get("/api/products", controller.getProducts);
+  app.get("/api/products/page/:page", controller.getAllProduct);
   app.post("/api/products/add", upload.any("product"), controller.add);
   app.get("/api/products/view/:id", controller.singleProduct);
   app.post("/api/products/edit", upload.any("product"), controller.edit);

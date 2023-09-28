@@ -117,6 +117,7 @@ require("./routes/infoCompany.routes")(app);
 require("./routes/bookRice.routes")(app);
 require("./routes/employee.routes")(app);
 require("./routes/base.routes")(app);
+require("./routes/recruitment.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

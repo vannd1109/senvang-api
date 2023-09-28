@@ -25,6 +25,7 @@ db.infoCompany = require("./infoCompany.model");
 db.bookRice = require("./bookRice.model");
 db.employee = require("./employee.model");
 db.base = require("./base.model");
+db.recruitment = require("./recruitment.model");
 
 db.ROLES = ["admin", "user", "guest"];
 

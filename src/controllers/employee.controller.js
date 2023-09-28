@@ -10,6 +10,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 exports.login = (req, res) => {
+  console.log(req.body.username);
   Employee.findOne({
     username: req.body.username,
   }).exec((err, employee) => {
